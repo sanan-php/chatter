@@ -1,0 +1,34 @@
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="/static/css/app.css?v=1.0.0">
+</head>
+<body>
+<div id="wrapper">
+	<div id="form-container">
+		{% if error %}
+			<div id="error-container">
+				{{ error }}
+			</div>
+		{% endif %}
+		<form action="{{ links.login }}" method="post">
+			<div>
+				{{ labels.login }}:
+			</div>
+			<div><input type="text" id="login" name="login" value="{{ login }}"/></div>
+			<div>
+				{{ labels.pass }}:
+			</div>
+			<div><input type="password" id="pass" name="password"/></div>
+			<div>
+				<input type="submit" id="form-button" value="{{ labels.enter }}"/>
+			</div>
+		</form>
+		<div>
+			{{ labels.ask }} <a href="{{ links.reg }}">
+				{{ labels.join }}
+			</a>
+		</div>
+	</div>
+</div>
+</body>
+</html>

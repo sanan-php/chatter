@@ -1,0 +1,158 @@
+div#wrapper {
+    display:  block;
+    float:  left;
+    width: 50%;
+    margin: 0 25%;
+}
+
+div#wrapper a{
+    color: #6f98a5;
+}
+
+body {
+    padding: 0;
+    margin:  0 auto;
+}
+div#form-container {
+    padding-top: 65px;
+}
+div#form-container div, div#main-container div {
+    display:  block;
+    float:  left;
+    width: 90%;
+    margin: 5px 5%;
+}
+div#main-container div.block {
+    border-bottom: 1px dashed #bcbabc;
+    line-height: 30px;
+}
+div.label {
+    color: #a5a5a5;
+}
+
+div#form-container input, div#main-container select, div#main-container input{
+    width: 100%;
+    height: 35px;
+    border: 0;
+    background: #fafafa;
+    padding-left: 5px;
+    margin-bottom: 5px;
+}
+
+div#form-container, div#main-container {
+    position: relative;
+    display: block;
+    float: left;
+    width: 100%;
+    margin: 0 5%;
+    font-family: "arial","helvetica","sans-serif";
+}
+
+div#form-container button, div#form-container input[type=submit], div#main-container button, div#main-container input[type=submit] {
+    height: 39px;
+    width: 100%;
+    border: 1px solid #888888;
+    cursor: pointer;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f2f6f8+0,d8e1e7+50,b5c6d0+51,e0eff9+100;Grey+Gloss+%232 */
+    background: #f2f6f8; /* Old browsers */
+    background: -moz-linear-gradient(top,  #f2f6f8 0%, #d8e1e7 50%, #b5c6d0 51%, #e0eff9 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f6f8', endColorstr='#e0eff9',GradientType=0 ); /* IE6-9 */
+}
+div#error-container {
+    font-size: 14px;
+    color: #434343;
+    background: #ffdddd;
+    height: auto;
+    line-height: 25px;
+    padding: 0 2%;
+    width: 86% !important;
+    position: absolute;
+    top: 5px;
+    border-radius: 5px;
+}
+input:-webkit-autofill{
+    box-shadow:inset 0 0 0 1000px #fafafa;
+    border: 0;
+}
+/** input[type=file] */
+.file_upload{
+    position: relative;
+    overflow: hidden;
+    font-size: 15px;
+    height: 39px;
+    line-height: 39px;
+    border: 0;
+}
+.file_upload > button{
+    float: right;
+    width: 8em;            /* example */
+    height: 98%
+}
+.file_upload > div{
+    padding-left: 1em      /* example */
+}
+.file_upload input[type=file]{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    transform: scale(20);
+    letter-spacing: 10em;     /* IE 9 fix */
+    -ms-transform: scale(20); /* IE 9 fix */
+    opacity: 0;
+    cursor: pointer
+}
+
+/* Making it beautiful */
+.file_upload > button{
+    background: #f2f6f8; /* Old browsers */
+    background: -moz-linear-gradient(top,  #f2f6f8 0%, #d8e1e7 50%, #b5c6d0 51%, #e0eff9 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f6f8', endColorstr='#e0eff9',GradientType=0 ); /* IE6-9 */
+    border: 0;
+    color: #4f4f4f;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis
+}
+.file_upload:hover > button{
+    color: #3a3a3a
+}
+.file_upload:active > button{
+    color: #272726;
+}
+
+.profile-page {
+    border-bottom: 1px dashed #bcbabc;
+    line-height: 30px;
+}
+
+div#chat-container {
+    position: relative;
+    display: block;
+    float: left;
+    width: 100%;
+    margin: 0 25%;
+    font-family: "arial","helvetica","sans-serif";
+}
+div#wrapper-chat {
+    display:  block;
+    float:  left;
+    width: 80%;
+    margin: 0 10%;
+}
+
+div#wrapper-chat a{
+    color: #6f98a5;
+}
+div#chat-container {
+    margin: 0 auto;
+}
+div#chat-container div.block {
+    border-bottom: 1px dashed #bcbabc;
+    line-height: 30px;
+}

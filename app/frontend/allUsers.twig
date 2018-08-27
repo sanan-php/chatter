@@ -1,0 +1,22 @@
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="/static/css/app.css?v=1.0.0">
+</head>
+<body>
+<div id="wrapper">
+	<div id="main-container">
+		<div class="block">
+			<a href="{{ links.profile }}">{{ labels.profile }}</a> |
+			<a href="{{ links.logout }}">{{ labels.exit }}</a>
+		</div>
+		{% for user in users %}
+			{% if currentUser.getId() != user.getId() %}
+					<div class="block"><a href="{{ links.chat }}&with={{ user.getId() }}">{{ user.getName() }}</a></div>
+				{% else %}
+					<div class="block"><a href="#">{{ user.getName() }}</a></div>
+			{% endif %}
+		{% endfor %}
+	</div>
+</div>
+</body>
+</html>
