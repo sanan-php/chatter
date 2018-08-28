@@ -12,6 +12,7 @@
             {{ labels.allUsers }}
         </a>
     </span>
+    {% include '@app/blocks/search.twig' with {"userSearch": labels.userSearch } %}
     <span class="right">
         <a href="{{ links.profile }}">
             {% include '@app/blocks/userPic.twig' with {"user": user, "size": 30 } %}
@@ -36,15 +37,19 @@
             <div id="users-list"></div>
         </div>
         <div id="dialogue">
-            <div id="messages"></div>
+            <div id="messages">
+                <div id="older"></div>
+                <div id="new-loaded"></div>
+            </div>
             <div id="write-form">
                 <input type="hidden" class="emptyText" value="{{ labels.emptyText }}">
                 <form action="{{ links.newMessageCreate }}" enctype="application/x-www-form-urlencoded" method="post" id="message-form">
                     <div id="write-input">
                         <textarea id="new-message" title="{{ labels.emptyText }}" name="message"></textarea>
                     </div>
-                    <input type="hidden" id="chat-with" value="{{ with }}">
-                    <input type="hidden" id="current-user" value="{{  user.getId() }}">
+                    <input type="hidden" id="chat-with" value={{ with }}>
+                    <input type="hidden" id="current-user" value={{  user.getId() }}>
+                    <input type="hidden" id="rand" value="{{ rand }}">
                     <input type="submit" value="Отправить" id="send-message-submit">
                 </form>
             </div>

@@ -11,6 +11,12 @@ use Chat\Helpers\Logger;
 
 class UserManager extends AbstractManager
 {
+
+    /**
+     * @param UserDto $userDto
+     * @return bool
+     * @throws \Exception
+     */
 	public function create(UserDto $userDto)
 	{
 		if(!$this->isEmail($userDto->getEmail())) {
@@ -18,12 +24,12 @@ class UserManager extends AbstractManager
 			return false;
 		}
 		$user = new User();
-		$user->setId(time());
+		$user->setId(md5(time().random_int(1111,9999)));
 		$user->setName($userDto->getName());
 		$user->setEmail($userDto->getEmail());
 		$user->setPass($this->passHash($userDto->getPass()));
 
-		return $this->db->writeData($user::getEntityName(), $user);
+		return $this->db->setItem($user::getEntityName(), $user->getId(), $user);
 	}
 
 	/**
@@ -63,7 +69,7 @@ class UserManager extends AbstractManager
 			$user->setName($name);
 		}
 
-		return $this->db->update('User',$user->getId(), $user);
+		return $this->db->putItem('User',$user->getId(), $user);
 	}
 
 	public function authorize(User $user)
@@ -80,9 +86,9 @@ class UserManager extends AbstractManager
 		if(!$user) {
 			return false;
 		}
-		if($user->getPass() !== $this->passHash($pass)) {
-			Logger::write('Неверный пароль: ' . $login . ';' . __LINE__ . ';' . __CLASS__);
-			return false;
+		if(!\in_array($user->getPass(), [$this->passHash($pass), $this->passHash($pass,true)],false)) {
+            Logger::write('Неверный пароль: ' . $login . ';' . __LINE__ . ';' . __CLASS__);
+            return false;
 		}
 		$hash = $this->hashGen($user->getId(), $user->getEmail());
 		setcookie(Reference::UID_COOKIE,$user->getId(),strtotime(SavingTimes::AUTH),'/',HOST);
@@ -97,12 +103,12 @@ class UserManager extends AbstractManager
 		setcookie(Reference::HASH_COOKIE, '', time()-3000,'/',HOST);
 	}
 
-	public function getById(int $id)
+	public function getById(string $id)
 	{
 		return $this->db->getItem(User::getEntityName(), $id);
 	}
 
-	public function checkAuth(int $id, string $hash)
+	public function checkAuth(string $id, string $hash)
 	{
 		/** @var User $user */
 		$user = $this->db->getItem(User::getEntityName(), $id);
@@ -118,15 +124,18 @@ class UserManager extends AbstractManager
 	{
 		setcookie(Reference::UID_COOKIE,'',time()-3000,'/', HOST);
 		setcookie(Reference::HASH_COOKIE,'',time()-3000,'/', HOST);
-
 	}
 
-	public function passHash(string $pass)
+	public function passHash(string $pass, $old = false)
 	{
-		return sha1(md5($pass.SALT));
+	    if($old === true) {
+	        return sha1(md5($pass.SALT));
+        }
+
+		return hash('sha256', $pass.SALT);
 	}
 
-	public function hashGen(int $id, string $email)
+	public function hashGen(string $id, string $email)
 	{
 		return sha1(base64_encode(AUTH_KEY . ":{$id}:{$email}"));
 	}
@@ -164,7 +173,7 @@ class UserManager extends AbstractManager
 	 */
 	public function getAll(int $limit = 30, $offset = 0, $shuffle = false)
 	{
-		return $this->db->getAll('User', $limit, $offset, $shuffle);
+		return $this->db->getValues('User', $limit, $offset, $shuffle);
 	}
 
 	protected function isEmail(string $email)

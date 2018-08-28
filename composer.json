@@ -1,9 +1,9 @@
 {
     "require": {
         "jms/serializer": "^1.13",
-        "predis/predis": "^1.1",
         "doctrine/annotations": "^1.6",
-        "twig/twig": "^2.0"
+        "twig/twig": "^2.0",
+        "cheprasov/php-redis-client": "^1.8"
     },
     "require-dev": {
         "php" : "^7.2",

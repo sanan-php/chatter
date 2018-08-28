@@ -7,11 +7,11 @@ use JMS\Serializer\Annotation;
 class Message extends Item
 {
 	/**
-	 * @Annotation\Type("int")
+	 * @Annotation\Type("string")
 	 */
 	private $from;
 	/**
-	 * @Annotation\Type("int")
+	 * @Annotation\Type("string")
 	 */
 	private $to;
 	/**
@@ -37,14 +37,14 @@ class Message extends Item
 
 	/**
 	 * Message constructor.
-	 * @param int $from
-	 * @param int $to
+	 * @param string $from
+	 * @param string $to
 	 * @param string $message
 	 * @throws \Exception
 	 */
 	public function __construct(
-		int $from,
-		int $to,
+		string $from,
+		string $to,
 		string $message
 	)
 	{

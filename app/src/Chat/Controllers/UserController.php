@@ -13,6 +13,7 @@ class UserController extends BaseController
 	 * @throws \Twig_Error_Loader
 	 * @throws \Twig_Error_Runtime
 	 * @throws \Twig_Error_Syntax
+     * @throws \Exception
 	 */
 	public function getRegistration()
 	{
@@ -44,6 +45,7 @@ class UserController extends BaseController
 			/** @var User $user */
 			$user = $this->userManager->create($dto);
 			if(!$user) {
+			    $params['error'] = $this->l10n['regPage']['error'] . ' К сожалению, не удалось Вас зарегистрировать';
 				$this->response->render('user:reg', $params);
 			}
 			$this->userManager->authorize($user);

@@ -17,15 +17,5 @@ interface ItemInterface
 	/**
 	 * @return string
 	 */
-	public function getGroupId() : ?string;
-
-	/**
-	 * @param string $id
-	 */
-	public function setGroupId(string $id) : void;
-
-	/**
-	 * @return string
-	 */
 	public static function getEntityName() : string;
 }

@@ -4,7 +4,9 @@
 </head>
 <body>
 <div class="header-menu">
-	<span class="left"></span>
+	<span class="left">
+	</span>
+	{% include '@app/blocks/search.twig' with {"userSearch": labels.userSearch }  %}
 	<span class="right">
 		<a href="{{ links.profile }}">
 			{% include '@app/blocks/userPic.twig' with {"user": currentUser, "size": 30 } %}

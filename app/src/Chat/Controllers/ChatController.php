@@ -32,7 +32,7 @@ class ChatController extends BaseController
                 'newMessageCreate' => Url::createLinkToAction('message','create')
 			],
 			'currentContact' => $this->userManager->getById($with),
-            'rand' => false,
+            'rand' => random_int(1111,9999),
             'with' => $with
 		];
 		$this->response->render('chat:private', $params);

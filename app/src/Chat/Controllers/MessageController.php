@@ -10,14 +10,12 @@ use Chat\Managers\MessageManager;
 
 class MessageController extends BaseController
 {
-	private $currentUserId;
 	/** @var MessageManager */
 	private $messageManager;
 
 	public function __construct()
 	{
 		parent::__construct();
-		$this->currentUserId = (int) $this->request->cookie(Reference::UID_COOKIE);
 		$this->messageManager = ServiceBinder::bind(MessageManager::class);
 	}
 
@@ -27,20 +25,21 @@ class MessageController extends BaseController
 	 */
 	public function getCreate()
 	{
-        $to = (int) $this->request->post('to');
+        $to = $this->request->post('to');
 		if(!$this->tryAuth(false)) {
 			Headers::set()->forbidden();
 			$this->response->forbidden();
 		}
 		if(!$this->isPostQuery()) {
-			Headers::set()->forbidden();
+			Headers::set()->conflict();
 			$this->response->jsonFromArray([
-				'errorMess' => $this->l10n['messages']['forbidden']
+				'errorMess' => $this->l10n['messages']['conflict']
 			]);
 		}
 		$message = base64_decode($this->request->post('message'));
-		$result = $this->messageManager->create($this->currentUserId, $to, $message);
+		$result = $this->messageManager->create($this->getCurrentUser()->getId(), $to, $message);
 		if(!$result) {
+            Headers::set()->conflict();
 			$this->response->jsonFromArray([
 				'errorMess' => $this->l10n['messages']['notCreated']
 			]);
@@ -65,12 +64,12 @@ class MessageController extends BaseController
 	public function getAll()
 	{
 		$this->tryAuth();
-        $to = (int) $this->request->post('to');
-		$limit = (int) $this->request->get('limit');
-		$offset = (int) $this->request->get('offset');
+        $to = $this->request->post('to');
+		$endPosition = (int) $this->request->get('endPosition');
+		$startPosition = (int) $this->request->get('startPosition');
 		/** @var Message[] $result */
-		$result = $this->messageManager->getMessages($this->currentUserId, $to, $limit, $offset);
-        $result2 = $this->messageManager->getMessages($to, $this->currentUserId, $limit, $offset);
+		$result = $this->messageManager->getMessages($this->getCurrentUser()->getId(), $to, $endPosition, $startPosition);
+        $result2 = $this->messageManager->getMessages($to, $this->getCurrentUser()->getId(), $endPosition, $startPosition);
 		if(!$result && !$result2) {
             $this->response->jsonFromArray([
                 'errorMess' => $this->l10n['messages']['messagesNotFound'] . ';' . $to
@@ -79,17 +78,11 @@ class MessageController extends BaseController
 		$messages = $this->convertToArray($result);
 		$temp = $this->convertToArray($result2);
 		if(\count($temp) && \count($messages)) {
-		    $messages[] = $temp;
+		    $messages = array_merge($messages,$temp);
         } elseif(\count($temp)) {
 		    $messages = $temp;
         }
-		$byCreated = [];
-		foreach ($messages as $key => $row) {
-		    if($row === '') {
-		        continue;
-            }
-			$byCreated[$key] = $row['createdAt'];
-		}
+		$messages = $this->sortMessages($messages);
 		$this->response->jsonFromArray([
 			'content' => $messages
 		]);
@@ -104,12 +97,25 @@ class MessageController extends BaseController
             }
             $messages[] = [
                 'id' => $item->getId(),
-                'from' => $item->getFrom(),
-                'to' => $item->getTo(),
+                'from' => (string) $item->getFrom(),
+                'to' => (string) $item->getTo(),
                 'text' => $item->getMessage(),
-                'createdAt' => $item->getCreatedAt(),
+                'createdAt' => date('d.m.Y H:i:s', strtotime($item->getCreatedAt())),
+                'timestamp' => strtotime($item->getCreatedAt())
             ];
         }
+
+        return $messages;
+    }
+
+    private function sortMessages($messages)
+    {
+        $createdAt = array_column($messages,'timestamp');
+        $byCreated = [];
+        foreach ($createdAt as $item) {
+            $byCreated[] = $item;
+        }
+        array_multisort($byCreated,SORT_NUMERIC,SORT_ASC, $messages);
 
         return $messages;
     }

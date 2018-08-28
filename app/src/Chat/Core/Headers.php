@@ -30,6 +30,11 @@ class Headers
 		header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
 	}
 
+	public function conflict()
+    {
+        header($_SERVER['SERVER_PROTOCOL'] . ' 409 Conflict');
+    }
+
 	public function redirect(string $url)
 	{
 		header('Location: ' . $url);

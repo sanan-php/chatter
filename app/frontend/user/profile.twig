@@ -10,6 +10,7 @@
 			{{ labels.usersList }}
 		</a>
 	</span>
+    {% include '@app/blocks/search.twig'  with {"userSearch": labels.userSearch } %}
 	<span class="right">
 		<a href="{{ links.logout }}">
 			<img src="/static/img/logout.png" width="20" height="20" align="absmiddle">

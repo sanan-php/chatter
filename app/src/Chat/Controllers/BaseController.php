@@ -8,6 +8,7 @@ use Chat\Core\Request;
 use Chat\Core\Response;
 use Chat\Core\ServiceBinder;
 use Chat\Entity\User;
+use Chat\Helpers\Logger;
 use Chat\Helpers\Url;
 use Chat\Managers\UserManager;
 
@@ -46,6 +47,7 @@ abstract class BaseController
 		$hash = $this->request->cookie(Reference::HASH_COOKIE);
 		if(!$id && !$hash) {
 			if($redirect) {
+			    Logger::write('Куки не установлены');
 				$this->response->redirect(Url::createLinkToAction('user','login'));
 			}
 			return false;
@@ -53,6 +55,7 @@ abstract class BaseController
 		if(!$this->userManager->checkAuth($id, $hash)) {
 			$this->userManager->clearAuth();
 			if($redirect) {
+
 				$this->response->redirect(Url::createLinkToAction('user','login'));
 			}
 			return false;
@@ -69,7 +72,7 @@ abstract class BaseController
 		if(!$this->tryAuth(false)) {
 			return false;
 		}
-		$id = (int) $this->request->cookie(Reference::UID_COOKIE);
+		$id = $this->request->cookie(Reference::UID_COOKIE);
 
 		return $this->userManager->getById($id);
 	}

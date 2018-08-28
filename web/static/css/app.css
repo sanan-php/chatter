@@ -285,7 +285,7 @@ div#form-container img, div#main-container img, div#chat-container img, .header-
     font-size: 18px;
     padding: 5px 15px;
     background: #c8c8c8;
-    color: white;
+    color: #454545;
     border-radius: 12px 14px 3px 14px;
     float: right;
 }
@@ -326,4 +326,20 @@ div#form-container img, div#main-container img, div#chat-container img, .header-
     line-height: 30px;
     border-radius: 12px 0 6px 0;
     cursor: pointer;
+}
+.search-users {
+    display: block;
+    float: left;
+    position: relative;
+    height: 50px;
+}
+#search-field {
+    margin-top: .6em;
+    background: url("/static/img/search.png") no-repeat 97% 5px;
+    background-color: #f9f9f9;
+    padding: 3%;
+    border-radius: 1em;
+    border: 1px solid #cbc7c7;
+    box-shadow: 0 1px 0 0 #fff inset;
+    margin-left: 1em;
 }

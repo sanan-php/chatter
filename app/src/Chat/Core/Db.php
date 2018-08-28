@@ -2,9 +2,8 @@
 
 namespace Chat\Core;
 
-use Chat\Entity\Base\Item;
 use Chat\Helpers\Logger;
-use Predis\Client;
+use RedisClient\ClientFactory;
 
 class Db
 {
@@ -14,11 +13,10 @@ class Db
 	public function __construct()
 	{
 		try {
-			$client = new Client([
-				'scheme' => 'tcp',
-				'host' => '127.0.0.1',
-				'port' => 6379,
-			]);
+			$client = ClientFactory::create([
+                'server' => '127.0.0.1:6379',
+                'timeout' => 2,
+            ]);
 			$this->db = $client;
 		} catch (\Exception $e) {
 			die($e->getMessage());
@@ -32,142 +30,87 @@ class Db
 		return new self();
 	}
 
-	/**
-	 * @param string $entity
-	 * @param Item $item
-	 * @return object|bool
-	 */
-	public function writeData(string $entity, Item $item)
+	public function getItem($entity, string $item)
 	{
-		if(!class_exists("Chat\\Entity\\$entity")) {
-			Logger::write('Объект не найден : ' . __LINE__ . ';' . __CLASS__);
+
+		if(!$this->db->hexists($entity, $item)) {
+            Logger::write('Объект не существует : ' . $entity . ';' . $item . ';' . __LINE__ . ';' . __CLASS__);
+            return false;
+        }
+
+		return $this->serializer->deserialize($this->db->hget($entity, $item),"Chat\\Entity\\$entity",'json');
+	}
+
+    public function setItem(string $entity, string $id, $content)
+    {
+        $result = $this->db->hset($entity, $id, $this->serializer->serialize($content,'json'));
+        if($result === 0) {
+            return false;
+        }
+        $this->db->publish($entity,$id);
+
+        return $content;
+    }
+
+    public function putItem(string $entity, string $id, $content)
+    {
+        $old = $this->db->hdel($entity, [$id]);
+        $updated = $this->db->hset($entity, $id, $this->serializer->serialize($content,'json'));
+
+        return ($old === 1 && $updated === 1);
+    }
+
+    public function getValues(string $entity, $limit = 30, $offset = 0, $shuffle = false)
+    {
+        $values = $this->db->hvals($entity);
+        if(!\count($values)) {
+            return false;
+        }
+        if($shuffle) {
+            shuffle($values);
+        }
+        $data= '['.implode(',',$values).']';
+        $items = $this->serializer->deserialize(
+            $data,
+            "array<Chat\\Entity\\{$entity}>",
+            'json'
+        );
+
+        return $items;
+    }
+
+	public function getList($entity, $group, $endPosition = 30, $startPosition = 0)
+	{
+	    if($endPosition === 0){
+	        $endPosition = 30;
+        }
+        $length = $this->db->llen($entity . ':' . $group);
+        if($length > $endPosition) {
+            $startPosition = $length - $endPosition;
+            $endPosition = $length;
+        }
+		$content = $this->db->lrange($entity . ':'. $group, $startPosition, $endPosition);
+		if(!\count($content)) {
 			return false;
 		}
-		if($item->getId() === null) {
-			Logger::write('Объект не опознан : ' . __LINE__ . ';' . __CLASS__);
-			return false;
-		}
-		$id = $item->getId();
-		if ($item->getGroupId() !== null) {
-			$id = $item->getGroupId();
-		}
-		if($this->isExists($entity, $id)) {
-			return $this->getContentFromDb($entity, $id);
-		}
-		$result = $this->setContentInDb($entity, $id, $item);
+        $data= '['.implode(',',$content).']';
+        $items = $this->serializer->deserialize(
+            $data,
+            "array<Chat\\Entity\\{$entity}>",
+            'json'
+        );
+
+		return $items;
+	}
+
+	public function setList(string $entity, string $group, $content)
+	{
+		$result = $this->db->lpush($entity.':'.$group, $this->serializer->serialize($content,ContentTypes::SAVED_DATA_TYPE));
 		if($result === 0) {
-			Logger::write('Не удалось создать объект: ' . $result . ';' . __LINE__ . ';' . __CLASS__);
-			return false;
-		}
-
-		return $item;
-	}
-
-	public function update(string $entity, string $id, $content)
-	{
-		if($this->isExists($entity, $id)) {
-			$result = $this->putContentInDb($entity, $id, $content);
-			if(!$result) {
-				Logger::write('Не удалось обновить объект: ' . __LINE__ . ';' . __CLASS__);
-
-				return false;
-			}
-			return true;
-		}
-		Logger::write('Не удалось обновить объект: ' . __LINE__ . ';' . __CLASS__);
-
-		return false;
-	}
-
-	public function getAll(string $entity, $limit = 30, $offset = 0, $shuffle = false)
-	{
-		$findItemInterfaces = $this->db->hgetall($entity);
-		if(!\count($findItemInterfaces) === 0) {
-			Logger::write('Объекты не найдены : ' . __LINE__ . ';' . __CLASS__);
-			return false;
-		}
-        $vals= array_values($findItemInterfaces);
-		if($shuffle) {
-		    shuffle($vals);
-        }
-		$values = '['.implode(',',$vals).']';
-		$items = $this->serializer->deserialize(
-			$values,
-			"array<Chat\\Entity\\{$entity}>",
-			'json'
-		);
-		if($limit === 0) {
-			return $items;
-		}
-
-		return \array_slice($items, $offset, $limit);
-	}
-
-	public function getItem($entity, $item)
-	{
-		if(!$this->isExists($entity,$item)) {
-			Logger::write('Объект не существует : ' . $entity . ';' . $item . ';' . __LINE__ . ';' . __CLASS__);
-			return false;
-		}
-		$content = $this->getContentFromDb($entity, $item);
-		if(empty($content)) {
-			Logger::write('Объект не найден : ' . $entity . ';' . $item . ';' . __LINE__ . ';' . __CLASS__);
-			return false;
-		}
-
-		return $content;
-	}
-
-	public function getGroup($entity, $group, $limit = 30, $offset = 0)
-	{
-		$content = $this->getContentFromDb($entity, $group);
-		if(!$content) {
-			return false;
-		}
-        if(!\is_array($content)) {
-            $content = [
-                $content
-            ];
-        }
-		if ($limit === 0) {
-			return $content;
-		}
-
-		return \array_slice($content, $offset, $limit);
-	}
-
-	public function isExists(string $entity, string $id)
-	{
-		return $this->db->hexists($entity, $id);
-	}
-
-	public function getContentFromDb(string $entity, string $id)
-	{
-		switch($entity) :
-			case 'Messages':
-				$type = "array<Chat\\Entity\\$entity>";
-				break;
-			default:
-				$type = "Chat\\Entity\\$entity";
-				break;
-			endswitch;
-		$content = $this->db->hget($entity, $id);
-		if(empty($content)) {
 		    return false;
         }
+        $this->db->publish($entity, $group);
 
-		return $this->serializer->deserialize($content, $type,ContentTypes::SAVED_DATA_TYPE);
-	}
-
-	private function setContentInDb(string $entity, string $id, $content)
-	{
-		return $this->db->hset($entity, $id, $this->serializer->serialize($content,ContentTypes::SAVED_DATA_TYPE));
-	}
-
-	private function putContentInDb(string $entity, string $id, $content)
-	{
-		$res = $this->db->hdel($entity,[$id,$this->serializer->serialize($content,ContentTypes::SAVED_DATA_TYPE)]);
-
-		return $this->db->hset($entity, $id, $this->serializer->serialize($content,ContentTypes::SAVED_DATA_TYPE));
+        return $content;
 	}
 }

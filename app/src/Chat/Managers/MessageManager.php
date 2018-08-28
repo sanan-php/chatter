@@ -20,13 +20,13 @@ class MessageManager extends AbstractManager
 	}
 
 	/**
-	 * @param int $from
-	 * @param int $to
+	 * @param string $from
+	 * @param string $to
 	 * @param string $message
 	 * @return string|bool
 	 * @throws \Exception
 	 */
-	public function create(int $from, int $to, string $message)
+	public function create(string $from, string $to, string $message)
 	{
 		if(!$this->userManager->getById($from)) {
 			return false;
@@ -36,21 +36,24 @@ class MessageManager extends AbstractManager
 		}
 		$text = htmlspecialchars($message);
 		$message = new Message($from, $to, $text);
-		$message->setId($this->generateItemId($message::getEntityName(),$from));
-		$message->setGroupId(md5($from.$to));
+		$message->setId(md5(time()));
+		$result = $this->db->setList('Message', md5($from.$to), $message);
+		if(!$result) {
+		    return false;
+        }
 
-		return $this->serializer->serialize($this->db->writeData('Message', $message),'json');
+		return $this->serializer->serialize($result,'json');
 	}
 
 	/**
-	 * @param int $from
-	 * @param int $to
-	 * @param int $limit
-	 * @param int $offset
+	 * @param string $from
+	 * @param string $to
+	 * @param int $endPosition
+	 * @param int $startPosition
 	 * @return Message[]|bool
 	 */
-	public function getMessages(int $from, int $to, int $limit = 30, int $offset = 0)
+	public function getMessages(string $from, string $to, int $endPosition = 30, int $startPosition = 0)
 	{
-		return $this->db->getGroup(Message::getEntityName(),md5($from.$to), $limit, $offset);
+		return $this->db->getList(Message::getEntityName(), md5($from.$to), $endPosition, $startPosition);
 	}
 }
