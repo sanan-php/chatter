@@ -1,8 +1,8 @@
 $(function(){
-    $('#error-container').animate({
+    setInterval(function () {$('#error-container').animate({
         visibility : 'hidden',
         top: '-300px'
-    },4500);
+    },800)},1800);
     var wrapper = $( ".file_upload" ),
         inp = wrapper.find( "input" ),
         btn = wrapper.find( "button" ),

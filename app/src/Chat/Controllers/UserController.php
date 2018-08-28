@@ -5,7 +5,6 @@ namespace Chat\Controllers;
 use Chat\Core\Headers;
 use Chat\DTO\UserDto;
 use Chat\Entity\User;
-use Chat\Helpers\Logger;
 use Chat\Helpers\Url;
 
 class UserController extends BaseController
@@ -31,23 +30,30 @@ class UserController extends BaseController
 					'login' => Url::createLinkToAction('user','login'),
 				],
 				'name' => $name,
-				'email' => $login,
-				'error' => $this->l10n['regPage']['error']
+				'email' => $login
 			];
 			if(empty($name) || empty($login) || empty($pass)) {
-				Logger::write('Не все поля заполнены');
-				$this->response->render('reg', $params);
+				$params['error'] = $this->l10n['regPage']['error'].' Не все поля заполнены.';
+				$this->response->render('user:reg', $params);
 			}
+			if(\strlen($pass) < 8) {
+                $params['error'] = $this->l10n['regPage']['error'].' Пароль содержит меньше 8 знаков.';
+                $this->response->render('user:reg', $params);
+            }
 			$dto = new UserDto($name, $login, $pass);
 			/** @var User $user */
 			$user = $this->userManager->create($dto);
 			if(!$user) {
-				$this->response->render('reg', $params);
+				$this->response->render('user:reg', $params);
 			}
 			$this->userManager->authorize($user);
 		}
-		$this->response->render('reg',[
+		$this->response->render('user:reg',[
 			'labels' => $this->l10n['regPage'],
+            'links' => [
+                'reg' => Url::createLinkToAction('user','registration'),
+                'login' => Url::createLinkToAction('user','login'),
+            ],
 			'name' => '',
 			'email' => '',
 		]);
@@ -76,11 +82,11 @@ class UserController extends BaseController
 			if(!$this->userManager->checkUser($login, $pass)) {
 				$params['login'] = $login;
 				$params['error'] = $this->l10n['authPage']['error'];
-				$this->response->render('login', $params);
+				$this->response->render('user:login', $params);
 			}
 			$this->response->redirect(Url::createLinkToAction('user','profile'));
 		}
-		$this->response->render('login', $params);
+		$this->response->render('user:login', $params);
 	}
 
 	public function getLogout()
@@ -100,10 +106,13 @@ class UserController extends BaseController
 			Headers::set()->redirect(Url::createLinkToAction('user','login'));
 		}
 		$limit = (int) $this->request->get('limit');
+		if($limit < 30) {
+		    $limit = 30;
+        }
 		$offset = (int) $this->request->get('offset');
-		$this->response->render('allUsers', [
+		$this->response->render('user:allUsers', [
 			'currentUser' => $this->getCurrentUser(),
-			'users' => $this->userManager->getAll($limit, $offset),
+			'users' => $this->userManager->getAll($limit, $offset, true),
 			'links' => [
 				'profile' => Url::createLinkToAction('user','profile'),
 				'logout' => Url::createLinkToAction('user','logout'),
@@ -123,7 +132,7 @@ class UserController extends BaseController
 	{
 		$this->tryAuth();
 		$params = [
-			'rand' => random_int(111,99999),
+			'rand' => false,
 			'labels' => $this->l10n['profile'],
 			'user' => $this->getCurrentUser(),
 			'links' => [
@@ -138,14 +147,14 @@ class UserController extends BaseController
 			$sex = (int) $this->request->post('sex');
 			if(!$pic) {
 				$params['error'] = $this->l10n['profile']['fileIsUndefined'];
-				$this->response->render('profile', $params);
+				$this->response->render('user:profile', $params);
 			}
 			if(!$this->userManager->update($this->getCurrentUser(), $name, $sex, $pic)) {
 				$params['error'] = $this->l10n['profile']['fileUploadError'];
-				$this->response->render('profile', $params);
+				$this->response->render('user:profile', $params);
 			}
 			$this->response->redirect(Url::createLinkToAction('user','all'));
 		}
-		$this->response->render('profile', $params);
+		$this->response->render('user:profile', $params);
 	}
 }

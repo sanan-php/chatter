@@ -1,0 +1,34 @@
+<html>
+<head>
+	{% include '@app/blocks/header.twig' %}
+</head>
+<body>
+<div class="header-menu">
+	<span class="left"></span>
+	<span class="right">
+		<a href="{{ links.profile }}">
+			{% include '@app/blocks/userPic.twig' with {"user": currentUser, "size": 30 } %}
+            {{ currentUser.getName() }} {{ labels.profile }}
+		</a>
+		<a href="{{ links.logout }}">
+			<img src="/static/img/logout.png" width="20" height="20" align="absmiddle">
+			{{ labels.exit }}
+		</a>
+	</span>
+</div>
+<div id="wrapper">
+	<div id="main-container">
+		{% for user in users %}
+			<div class="block">
+				{% include '@app/blocks/userPic.twig' with {"user": user, "size": 55 } %}
+				{% if currentUser.getId() != user.getId() %}
+						<a href="/with/{{ user.getId() }}">{{ user.getName() }}</a>
+					{% else %}
+						<a href="#">{{ user.getName() }}</a>
+				{% endif %}
+			</div>
+		{% endfor %}
+	</div>
+</div>
+</body>
+</html>

@@ -14,7 +14,7 @@ class UserManager extends AbstractManager
 	public function create(UserDto $userDto)
 	{
 		if(!$this->isEmail($userDto->getEmail())) {
-			Logger::write('Неверный емейл : ' . __LINE__ . ';' . __CLASS__);
+			Logger::write('Неверный емейл : ' . $userDto->getEmail() . ';' . __LINE__ . ';' . __CLASS__);
 			return false;
 		}
 		$user = new User();
@@ -159,11 +159,12 @@ class UserManager extends AbstractManager
 	/**
 	 * @param int $limit
 	 * @param int $offset
+     * @param bool $shuffle
 	 * @return User[]
 	 */
-	public function getAll(int $limit = 30, $offset = 0)
+	public function getAll(int $limit = 30, $offset = 0, $shuffle = false)
 	{
-		return $this->db->getAll('User', $limit, $offset);
+		return $this->db->getAll('User', $limit, $offset, $shuffle);
 	}
 
 	protected function isEmail(string $email)

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Sanan
- * Date: 25.08.2018
- * Time: 19:47
- */
 
 namespace Chat\Helpers;
 

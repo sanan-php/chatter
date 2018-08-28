@@ -10,7 +10,7 @@ class Url
 	{
 		$params = [
 			Reference::CONTROLLER_QUERY_PARAM => $controller,
-			Reference::ACTION_QUERY_PARAM => $get
+			Reference::ACTION_QUERY_PARAM => $get,
 		];
 
 		return '/?' . http_build_query($params);

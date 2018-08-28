@@ -45,10 +45,13 @@ class Request
 		$this->files = $_FILES;
 
 		if(session_status() !== PHP_SESSION_ACTIVE) {
-			session_name('WCHAT');
-			session_start();
+			session_name('CHAT_SESS');
+			session_start([
+
+            ]);
 		}
-		$this->session = $_SESSION;
+
+        $this->session = $_SESSION;
 	}
 
 	public function get(string $name)
@@ -86,16 +89,6 @@ class Request
 	{
 		$name = strtoupper($name);
 
-		return $this->session[$name] ?? false;
-	}
-
-	public function setSession($name, $value)
-	{
-		$this->session[$name] = $value;
-	}
-
-	public function getSession($name)
-	{
 		return $this->session[$name] ?? false;
 	}
 

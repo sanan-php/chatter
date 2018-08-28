@@ -1,57 +1,92 @@
-div#wrapper {
-    display:  block;
-    float:  left;
-    width: 50%;
-    margin: 0 25%;
-}
-
-div#wrapper a{
-    color: #6f98a5;
-}
-
 body {
     padding: 0;
     margin:  0 auto;
+    background: #ebebeb;
+    text-align: center;
+    position: relative;
+    font-family: "arial","helvetica","sans-serif";
+}
+.header-menu {
+    background: #fff;
+    height: 3em;
+    line-height: 3em;
+    text-align: left;
+    padding-left: 5%;
+    width: 95%;
+}
+.header-menu span.left{
+    display: block;
+    float: left;
+}
+.header-menu span.right{
+    display: block;
+    float: right;
+}
+.header-menu a {
+    color: #807f7f;
+    text-decoration: none;
+    font-weight: normal;
+    padding: 0 15px;
+}
+div#wrapper {
+    width: 100%;
+    margin: 0 auto;
+    padding: 5% 0;
+    text-align: center;
+}
+div#wrapper a{
+    color: #6f98a5;
 }
 div#form-container {
-    padding-top: 65px;
+    padding-top: 35px;
+    position: relative;
+}
+div#form-container:last-child, div#main-container:last-child > .block:last-child {
+    padding-bottom: 25px;
+    border-bottom: 0 !important;
 }
 div#form-container div, div#main-container div {
-    display:  block;
-    float:  left;
     width: 90%;
-    margin: 5px 5%;
+    margin: 5px auto;
 }
 div#main-container div.block {
-    border-bottom: 1px dashed #bcbabc;
-    line-height: 30px;
+    border-bottom: 1px solid #bcbabc;
+    line-height: 40px;
 }
 div.label {
     color: #a5a5a5;
+    padding-top: 10px;
 }
 
 div#form-container input, div#main-container select, div#main-container input{
     width: 100%;
     height: 35px;
-    border: 0;
+    border: 1px solid #c2c2c2;
     background: #fafafa;
     padding-left: 5px;
     margin-bottom: 5px;
+    border-radius: 3px;
+    box-shadow: 0 1px 0 0 #fff inset;
 }
 
 div#form-container, div#main-container {
-    position: relative;
-    display: block;
-    float: left;
     width: 100%;
-    margin: 0 5%;
+    margin: auto auto;
     font-family: "arial","helvetica","sans-serif";
+    max-width: 460px;
+    min-width: 460px;
+    background: white;
+    text-align: left;
+    height: auto;
+    border-radius: .37em;
+    -webkit-box-shadow: 1px 0 10px 0 rgba(101, 101, 99, 0.94);
+    -moz-box-shadow: 1px 0 10px 0 rgba(101, 101, 99, 0.94);
+    box-shadow: 1px 0 10px 0 rgb(198, 198, 198);
 }
 
 div#form-container button, div#form-container input[type=submit], div#main-container button, div#main-container input[type=submit] {
     height: 39px;
     width: 100%;
-    border: 1px solid #888888;
     cursor: pointer;
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f2f6f8+0,d8e1e7+50,b5c6d0+51,e0eff9+100;Grey+Gloss+%232 */
     background: #f2f6f8; /* Old browsers */
@@ -59,18 +94,20 @@ div#form-container button, div#form-container input[type=submit], div#main-conta
     background: -webkit-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%); /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(to bottom,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f6f8', endColorstr='#e0eff9',GradientType=0 ); /* IE6-9 */
+    border: 1px solid #c2c2c2;
 }
 div#error-container {
     font-size: 14px;
     color: #434343;
     background: #ffdddd;
     height: auto;
-    line-height: 25px;
+    line-height: 28px;
     padding: 0 2%;
     width: 86% !important;
     position: absolute;
     top: 5px;
     border-radius: 5px;
+    margin: 0 5% !important;
 }
 input:-webkit-autofill{
     box-shadow:inset 0 0 0 1000px #fafafa;
@@ -84,6 +121,8 @@ input:-webkit-autofill{
     height: 39px;
     line-height: 39px;
     border: 0;
+    margin: 5px 0 !important;
+    width: 100% !important;
 }
 .file_upload > button{
     float: right;
@@ -117,7 +156,8 @@ input:-webkit-autofill{
     color: #4f4f4f;
     overflow: hidden;
     white-space: nowrap;
-    text-overflow: ellipsis
+    text-overflow: ellipsis;
+    border-radius: 3px;
 }
 .file_upload:hover > button{
     color: #3a3a3a
@@ -131,28 +171,159 @@ input:-webkit-autofill{
     line-height: 30px;
 }
 
-div#chat-container {
-    position: relative;
-    display: block;
-    float: left;
-    width: 100%;
-    margin: 0 25%;
-    font-family: "arial","helvetica","sans-serif";
-}
 div#wrapper-chat {
     display:  block;
     float:  left;
     width: 80%;
-    margin: 0 10%;
+    margin: 0 auto;
+    height: 90%;
+    padding: 0 10%;
 }
 
 div#wrapper-chat a{
     color: #6f98a5;
 }
 div#chat-container {
-    margin: 0 auto;
+    margin: 5% auto;
+    height: 80%;
+    background: #fff;
+    width: 100%;
+    position: relative;
+    border-radius: .3em;
+    box-shadow: 0 0 3px 0 rgba(0,0,0,.2);
 }
 div#chat-container div.block {
     border-bottom: 1px dashed #bcbabc;
+    line-height: 40px;
+}
+
+/** chat */
+#privates-container {
+    display: block;
+    float: left;
+    width: 25%;
+    height: 100%;
+    background: #f9f9f9;
+    border-radius: .37em 0 0 .37em;
+}
+#privates-container div{
+    padding-left: 5%;
+    text-align: left;
+}
+#dialogue {
+    display: block;
+    float: left;
+    width: 75%;
+    height: 100%;
+}
+#current-dialogue {
+    height: 15%;
+    line-height: normal;
+    background: #fff;
+    border-radius: .37em 0 0 0;
+    box-shadow: -3px 3px 3px 0 rgba(0,0,0,.2);
+    font-size: 20px;
+    position: relative;
+}
+#current-dialogue #contact-data {
+    height: 80%;
+    padding-top: 5%;
+}
+#current-dialogue #line {
+    height: 100%;
+    width: 20px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    box-shadow: inset -10px -1px 11px -15px rgba(0, 0, 0, 0.37);
+}
+#users-list {
+    box-shadow: -3px -1px 3px -1px inset rgba(0,0,0,.2);
+    height: 85%;
+}
+div#form-container img, div#main-container img, div#chat-container img, .header-menu .avatar {
+    border-radius: 50%;
+    margin: 5px;
+}
+#dialogue {
+    display: flex; flex-direction: column;
+}
+#messages {
+    border-bottom: 1px solid #d4d4d4;
+    height: 80%;
+    overflow: auto;
+    flex: 1 1 90%; display: flex; flex-direction: column;
+}
+.outbox:first-child, .inbox:first-child{
+    margin-top: 20px;
+}
+.outbox:last-child, .inbox:last-child{
+    margin-bottom:20px;
+}
+#message {
+    flex: 1 1 auto; clear: both;
+    position: relative;
+}
+.inbox, .outbox {
+    margin: 5px 2%;
+    position: relative;
+    bottom: 0;
+    max-width: 50%;
+    text-align: inherit;
+}
+.inbox {
+    line-height: 28px;
+    font-size: 18px;
+    padding: 5px 15px;
+    background: #2830d4;
+    color: white;
+    border-radius: 3px 14px 8px 14px;
+    float: left;
+}
+.outbox {
+    line-height: 28px;
+    font-size: 18px;
+    padding: 5px 15px;
+    background: #c8c8c8;
+    color: white;
+    border-radius: 12px 14px 3px 14px;
+    float: right;
+}
+#write-form {
+    flex: 0 0 20%;
+    display: flex;
+}
+
+#empty-dialogue {
+    display: block;
+    float: left;
+    background: #efefef;
+    max-width: 30%;
+    padding: 5px 10px;
+    text-align: inherit;
+    margin: 2%;
+    line-height: 35px;
+    border-radius: 3px 14px 10px 14px;
+}
+#new-message {
+    height: 110%;
+    border: 0;
+    background: white;
+    max-width: 1110px;
+    max-height: 130px;
+    font-family: "arial", "helvetica", "sans-serif";
+    font-size: 16px;
+    padding: 10px;
+    resize: none;
+}
+#send-message-submit {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    border: 0;
+    background: #171b7a;
+    color: white;
     line-height: 30px;
+    border-radius: 12px 0 6px 0;
+    cursor: pointer;
 }

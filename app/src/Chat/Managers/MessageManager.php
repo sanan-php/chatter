@@ -9,18 +9,21 @@ class MessageManager extends AbstractManager
 {
 	/** @var UserManager */
 	private $userManager;
+	/** @var \JMS\Serializer\Serializer */
+	private $serializer;
 
 	public function __construct()
 	{
 		parent::__construct();
 		$this->userManager = ServiceBinder::bind(UserManager::class);
+        $this->serializer = \JMS\Serializer\SerializerBuilder::create()->build();
 	}
 
 	/**
 	 * @param int $from
 	 * @param int $to
 	 * @param string $message
-	 * @return object|bool
+	 * @return string|bool
 	 * @throws \Exception
 	 */
 	public function create(int $from, int $to, string $message)
@@ -36,7 +39,7 @@ class MessageManager extends AbstractManager
 		$message->setId($this->generateItemId($message::getEntityName(),$from));
 		$message->setGroupId(md5($from.$to));
 
-		return $this->db->writeData('Message', $message);
+		return $this->serializer->serialize($this->db->writeData('Message', $message),'json');
 	}
 
 	/**
@@ -44,7 +47,7 @@ class MessageManager extends AbstractManager
 	 * @param int $to
 	 * @param int $limit
 	 * @param int $offset
-	 * @return Message[]
+	 * @return Message[]|bool
 	 */
 	public function getMessages(int $from, int $to, int $limit = 30, int $offset = 0)
 	{

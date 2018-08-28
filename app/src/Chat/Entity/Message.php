@@ -1,35 +1,29 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Sanan
- * Date: 25.08.2018
- * Time: 1:34
- */
 
 namespace Chat\Entity;
 use Chat\Entity\Base\Item;
-use JMS\Serializer\Annotation as Serializer;
+use JMS\Serializer\Annotation;
 
 class Message extends Item
 {
 	/**
-	 * @Serializer\Type("int")
+	 * @Annotation\Type("int")
 	 */
 	private $from;
 	/**
-	 * @Serializer\Type("int")
+	 * @Annotation\Type("int")
 	 */
 	private $to;
 	/**
-	 * @Serializer\Type("string")
+	 * @Annotation\Type("string")
 	 */
 	private $message;
 	/**
-	 * @Serializer\Type("string")
+	 * @Annotation\Type("string")
 	 */
 	private $createdAt;
 	/**
-	 * @Serializer\Type("string")
+	 * @Annotation\Type("string")
 	 */
 	private static $entity = 'Message';
 

@@ -79,14 +79,18 @@ class Db
 		return false;
 	}
 
-	public function getAll(string $entity, $limit = 30, $offset = 0)
+	public function getAll(string $entity, $limit = 30, $offset = 0, $shuffle = false)
 	{
 		$findItemInterfaces = $this->db->hgetall($entity);
 		if(!\count($findItemInterfaces) === 0) {
 			Logger::write('Объекты не найдены : ' . __LINE__ . ';' . __CLASS__);
 			return false;
 		}
-		$values = '['.implode(',',array_values($findItemInterfaces)).']';
+        $vals= array_values($findItemInterfaces);
+		if($shuffle) {
+		    shuffle($vals);
+        }
+		$values = '['.implode(',',$vals).']';
 		$items = $this->serializer->deserialize(
 			$values,
 			"array<Chat\\Entity\\{$entity}>",
@@ -102,12 +106,12 @@ class Db
 	public function getItem($entity, $item)
 	{
 		if(!$this->isExists($entity,$item)) {
-			Logger::write('Объект не существует : ' . __LINE__ . ';' . __CLASS__);
+			Logger::write('Объект не существует : ' . $entity . ';' . $item . ';' . __LINE__ . ';' . __CLASS__);
 			return false;
 		}
 		$content = $this->getContentFromDb($entity, $item);
 		if(empty($content)) {
-			Logger::write('Объект не найден : ' . __LINE__ . ';' . __CLASS__);
+			Logger::write('Объект не найден : ' . $entity . ';' . $item . ';' . __LINE__ . ';' . __CLASS__);
 			return false;
 		}
 
@@ -117,10 +121,14 @@ class Db
 	public function getGroup($entity, $group, $limit = 30, $offset = 0)
 	{
 		$content = $this->getContentFromDb($entity, $group);
-		if(empty($content)) {
-			Logger::write('Объект с такими параметрами не найден : ' . __LINE__ . ';' . __CLASS__);
-			return [];
+		if(!$content) {
+			return false;
 		}
+        if(!\is_array($content)) {
+            $content = [
+                $content
+            ];
+        }
 		if ($limit === 0) {
 			return $content;
 		}
@@ -144,6 +152,9 @@ class Db
 				break;
 			endswitch;
 		$content = $this->db->hget($entity, $id);
+		if(empty($content)) {
+		    return false;
+        }
 
 		return $this->serializer->deserialize($content, $type,ContentTypes::SAVED_DATA_TYPE);
 	}

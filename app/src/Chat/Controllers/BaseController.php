@@ -30,6 +30,9 @@ abstract class BaseController
 		$l10n = ServiceBinder::bind(L10n::class);
 		$this->l10n = $l10n->getContent();
 		$this->userManager = ServiceBinder::bind(UserManager::class);
+		if($this->request->get('from')) {
+		    $this->response->redirect($this->request->get('from'));
+        }
 	}
 
 	protected function isPostQuery()

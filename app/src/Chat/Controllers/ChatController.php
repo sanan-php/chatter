@@ -10,6 +10,7 @@ class ChatController extends BaseController
 	 * @throws \Twig_Error_Loader
 	 * @throws \Twig_Error_Runtime
 	 * @throws \Twig_Error_Syntax
+     * @throws \Exception
 	 */
 	public function getPrivate()
 	{
@@ -22,14 +23,18 @@ class ChatController extends BaseController
 			$this->response->redirect(Url::createLinkToAction('user', 'all'));
 		}
 		$params = [
+		    'user' => $this->getCurrentUser(),
 			'labels' => $this->l10n['chatPage'],
 			'links' => [
 				'allUsers' => Url::createLinkToAction('user','all'),
 				'profile' => Url::createLinkToAction('user','profile'),
 				'logout' => Url::createLinkToAction('user','logout'),
+                'newMessageCreate' => Url::createLinkToAction('message','create')
 			],
-			'with' => $with
+			'currentContact' => $this->userManager->getById($with),
+            'rand' => false,
+            'with' => $with
 		];
-		$this->response->render('chat', $params);
+		$this->response->render('chat:private', $params);
 	}
 }

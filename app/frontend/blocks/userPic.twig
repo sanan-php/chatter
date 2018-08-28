@@ -1,0 +1,11 @@
+{% if user.getPic() %}
+    <img src="{{ user.getPic() }}" width="28" height="28">
+{% else %}
+    {% if user.getSex() == 1 %}
+        <img src="/static/img/user-pic-m.png" width="{{ size }}" height="{{ size }}" align="absmiddle" class="avatar">
+    {% elseif user.getSex() == 2 %}
+        <img src="/static/img/user-pic-w.png" width="{{ size }}" height="{{ size }}" align="absmiddle" class="avatar">
+    {% else %}
+        <img src="/static/img/user-pic-u.png" width="{{ size }}" height="{{ size }}" align="absmiddle" class="avatar">
+    {% endif %}
+{% endif %}
