@@ -6,13 +6,13 @@
 </head>
 <body>
 <div class="header-menu">
+    {% include '@app/blocks/search.twig' with {"userSearch": labels.userSearch } %}
     <span class="left">
         <a href="{{ links.allUsers }}">
             <img src="/static/img/chatNow.png" width="25" height="25" align="absmiddle">
             {{ labels.allUsers }}
         </a>
     </span>
-    {% include '@app/blocks/search.twig' with {"userSearch": labels.userSearch } %}
     <span class="right">
         <a href="{{ links.profile }}">
             {% include '@app/blocks/userPic.twig' with {"user": user, "size": 30 } %}

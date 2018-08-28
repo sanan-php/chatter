@@ -17,6 +17,7 @@ body {
 .header-menu span.left{
     display: block;
     float: left;
+    margin-left: 2em;
 }
 .header-menu span.right{
     display: block;

@@ -60,10 +60,17 @@ class MessageController extends BaseController
 
     /**
      * Переписка с пользователем
+     *
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
 	public function getAll()
 	{
-		$this->tryAuth();
+        if(!$this->tryAuth(false)) {
+            Headers::set()->forbidden();
+            $this->response->forbidden();
+        }
         $to = $this->request->post('to');
 		$endPosition = (int) $this->request->get('endPosition');
 		$startPosition = (int) $this->request->get('startPosition');

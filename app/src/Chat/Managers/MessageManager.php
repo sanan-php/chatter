@@ -9,14 +9,12 @@ class MessageManager extends AbstractManager
 {
 	/** @var UserManager */
 	private $userManager;
-	/** @var \JMS\Serializer\Serializer */
-	private $serializer;
+
 
 	public function __construct()
 	{
 		parent::__construct();
 		$this->userManager = ServiceBinder::bind(UserManager::class);
-        $this->serializer = \JMS\Serializer\SerializerBuilder::create()->build();
 	}
 
 	/**
