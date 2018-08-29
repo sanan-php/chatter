@@ -58,6 +58,11 @@ div.label {
     color: #a5a5a5;
     padding-top: 10px;
 }
+#join-agreement {
+    margin-top: 5% !important;
+    padding: 2% 0;
+    border-top: 1px solid #c6c6c6;
+}
 
 div#form-container input, div#main-container select, div#main-container input{
     width: 100%;

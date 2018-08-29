@@ -33,6 +33,15 @@ class User extends Item
 	 */
 	private $sex;
 
+    /**
+     * @Annotation\Type("string")
+     */
+	private $birthDate;
+    /**
+     * @Annotation\Type("string")
+     */
+	private $location;
+
 	/**
 	 * @Annotation\Type("string")
 	 */
@@ -122,4 +131,45 @@ class User extends Item
 	{
 		$this->sex = $sex;
 	}
+
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBirthDate()
+    {
+        return $this->birthDate;
+    }
+
+    /**
+     * @param mixed $birthDate
+     */
+    public function setBirthDate($birthDate): void
+    {
+        $this->birthDate = $birthDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
+    /**
+     * @param mixed $location
+     */
+    public function setLocation($location): void
+    {
+        $this->location = $location;
+    }
 }
