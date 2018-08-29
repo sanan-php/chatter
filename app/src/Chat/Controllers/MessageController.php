@@ -44,6 +44,7 @@ class MessageController extends BaseController
 				'errorMess' => $this->l10n['messages']['notCreated']
 			]);
 		}
+        $this->sendToSocket('Message',$result);
 		$this->response->jsonFromArray([
 		    'success' => true,
             'content' => json_decode($result, true)

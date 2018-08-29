@@ -21,6 +21,7 @@ return [
 	'profile' => [
 		'name' => 'Имя',
 		'email' => 'Е-мейл',
+        'location' => 'Город',
 		'exit' => 'Выйти',
 		'usersList' => 'Начни общаться!',
 		'update' => 'Обновить',

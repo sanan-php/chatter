@@ -76,4 +76,11 @@ abstract class BaseController
 
 		return $this->userManager->getById($id);
 	}
+
+	protected function sendToSocket(string $entity, string $message)
+    {
+        $instance = stream_socket_client(APP_TCP_SOCKET);
+        fwrite($instance, "{'$entity':$message}\n");
+
+    }
 }

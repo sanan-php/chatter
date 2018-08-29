@@ -9,7 +9,8 @@ use Chat\Helpers\Url;
 
 class UserController extends BaseController
 {
-	/**
+
+    /**
 	 * @throws \Twig_Error_Loader
 	 * @throws \Twig_Error_Runtime
 	 * @throws \Twig_Error_Syntax
@@ -41,7 +42,7 @@ class UserController extends BaseController
                 $params['error'] = $this->l10n['regPage']['error'].' Пароль содержит меньше 8 знаков.';
                 $this->response->render('user:reg', $params);
             }
-			$dto = new UserDto($name, $login, $pass);
+			$dto = new UserDto($name, $login, $pass, $this->geo->get_value('city'));
 			/** @var User $user */
 			$user = $this->userManager->create($dto);
 			if(!$user) {
@@ -108,9 +109,6 @@ class UserController extends BaseController
 			Headers::set()->redirect(Url::createLinkToAction('user','login'));
 		}
 		$limit = (int) $this->request->get('limit');
-		if($limit < 30) {
-		    $limit = 30;
-        }
 		$offset = (int) $this->request->get('offset');
 		$this->response->render('user:allUsers', [
 			'currentUser' => $this->getCurrentUser(),
@@ -159,4 +157,44 @@ class UserController extends BaseController
 		}
 		$this->response->render('user:profile', $params);
 	}
+
+    /**
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+	public function getSearch()
+    {
+        $param = $this->request->post('queryString');
+        $isAjax = $this->request->post('isAjax');
+        if(!$this->tryAuth(false)) {
+            Headers::set()->forbidden();
+            $this->response->forbidden();
+        }
+        $limit = (int) $this->request->get('limit');
+        $offset = (int) $this->request->get('offset');
+        $allUsers = $this->userManager->getAll($limit,$offset);
+        $list = [];
+        foreach ($allUsers as $user) {
+            if(!\in_array($param,[$user->getName(),$user->getEmail()])) {
+                continue;
+            }
+            $list[] = $user;
+        }
+        if($isAjax) {
+            $this->response->jsonFromArray([
+               'find' => $list
+            ]);
+        }
+        $this->response->render('user:searchResults', [
+            'currentUser' => $this->getCurrentUser(),
+            'users' => $list,
+            'links' => [
+                'profile' => Url::createLinkToAction('user','profile'),
+                'logout' => Url::createLinkToAction('user','logout'),
+                'chat' => Url::createLinkToAction('chat','private'),
+            ],
+            'labels' => $this->l10n['allUsers']
+        ]);
+    }
 }

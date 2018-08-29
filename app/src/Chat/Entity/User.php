@@ -34,7 +34,7 @@ class User extends Item
 	private $sex;
 
     /**
-     * @Annotation\Type("string")
+     * @Annotation\Type("int")
      */
 	private $birthDate;
     /**

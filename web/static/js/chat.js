@@ -1,8 +1,8 @@
 'use strct';
-
 $(function(){
     var chatWith = $('#chat-with').val();
     var currentUser = $('#current-user').val();
+    var ws = 'ws://127.0.0.1:8000/?route=socket&action=worker&uid='+currentUser;
     var rand = $('#rand').val();
     w=$('#write-form').width();
     $('#new-message').width(w-20);
@@ -39,7 +39,7 @@ $(function(){
                         $('#messages #older').append('<div id="empty-dialogue">'+emptyText+'</div>');
                     }
                 }
-            }
+           }
         }
     });
 
@@ -68,4 +68,13 @@ $(function(){
             }
         });
     });
+
+    // check new messages
+    ws = new WebSocket(ws);
+    ws.onmessage = function(evt) {
+        $('#empty-dialogue').css('dispay','none');
+        message = '<div class="inbox">'+evt.text+'</div>';
+        $('#messages').append('<div id="message" class="id'+evt.id+'" title="'+evt.createdAt+'">'+message+'</div>');
+    }
+
 });

@@ -69,6 +69,9 @@ class Db
         if($shuffle) {
             shuffle($values);
         }
+        if($limit > 30) {
+            $values = \array_slice($values, $offset, $limit);
+        }
         $data= '['.implode(',',$values).']';
         $items = $this->serializer->deserialize(
             $data,

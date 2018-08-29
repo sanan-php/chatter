@@ -36,8 +36,20 @@ $(function(){
         }else
             btn.text( file_name );
     }).change();
-
 });
 $( window ).resize(function(){
     $( ".file_upload input" ).triggerHandler( "change" );
 });
+function lookup(inputString) {
+    if (inputString.length == 0) {
+        $('#search-results').fadeOut();
+    } else {
+        $.post("/?route=user&action=search", {
+            queryString: inputString
+        }, function (data) {
+            results = $('#search-results');
+            results.fadeIn();
+            results.html(data);
+        });
+    }
+}
