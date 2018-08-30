@@ -31,7 +31,7 @@ class MessageController extends BaseController
 		}
 		if(!$this->isPostQuery()) {
 			Headers::set()->conflict();
-			$this->response->jsonFromArray([
+			$this->response->json([
 				'errorMess' => $this->l10n['main']['conflict']
 			]);
 		}
@@ -39,12 +39,12 @@ class MessageController extends BaseController
 		$result = $this->messageManager->create($this->getCurrentUser()->getId(), $to, $message);
 		if(!$result) {
             Headers::set()->conflict();
-			$this->response->jsonFromArray([
+			$this->response->json([
 				'errorMess' => $this->l10n['messages']['notCreated']
 			]);
 		}
         $this->sendToSocket('Message',$result);
-		$this->response->jsonFromArray([
+		$this->response->json([
 		    'success' => true,
             'content' => json_decode($result, true)
         ]);
@@ -78,7 +78,7 @@ class MessageController extends BaseController
 		$result = $this->messageManager->getMessages($this->getCurrentUser()->getId(), $to, $endPosition, $startPosition);
         $result2 = $this->messageManager->getMessages($to, $this->getCurrentUser()->getId(), $endPosition, $startPosition);
 		if(!$result && !$result2) {
-            $this->response->jsonFromArray([
+            $this->response->json([
                 'errorMess' => $this->l10n['messages']['messagesNotFound'] . ';' . $to
             ]);
         }
@@ -90,7 +90,7 @@ class MessageController extends BaseController
 		    $messages = $temp;
         }
 		$messages = $this->sortMessages($messages);
-		$this->response->jsonFromArray([
+		$this->response->json([
 			'content' => $messages
 		]);
 	}

@@ -47,10 +47,8 @@ $(function(){
     $('#message-form').submit(function(e) {
         var $this = $(this);
         e.preventDefault();
-
         textMess = $('#new-message').val();
         textMessEncoded = $.base64Encode(textMess);
-        console.log(chatWith+':'+textMess);
         $('#new-message').val('');
         $.ajax({
             url: $this.attr('action'),

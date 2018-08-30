@@ -1,9 +1,11 @@
-{% if FavoriteManager('isFavorite',user, favId) %}
-    <span id="removeFavorite">
+{% if FavoriteManager('isFavorite',user.getId(), favId) %}
+    <span id="favorite" class="delete">
+        <input type="hidden" id="action" value="delete">
         <input type="hidden" id="favoriteId" value="{{ favId }}">
     </span>
 {% else %}
-    <span id="addFavorite">
+    <span id="favorite" class="create">
+        <input type="hidden" id="action" value="create">
         <input type="hidden" id="favoriteId" value="{{ favId }}">
     </span>
 {% endif %}

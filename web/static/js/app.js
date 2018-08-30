@@ -36,20 +36,30 @@ $(function(){
         }else
             btn.text( file_name );
     }).change();
+
+    $('#favorite').click(function() {
+        favoriteId = $('#favoriteId').val();
+        action  = $('#favorite #action').val();
+        if(action==='create') {
+            newAction = 'delete';
+        } else {
+            newAction = 'create';
+        }
+        $.ajax({
+            url: '/?route=favorite&action='+action,
+            type: 'post',
+            data: {
+                'favoriteId': favoriteId
+            },
+            success: function(response) {
+                if(response.success) {
+                    $('#favorite').removeAttr('class').attr('class',newAction);
+                    $('#favorite #action').val(newAction);
+                }
+            }
+        });
+    });
 });
 $( window ).resize(function(){
     $( ".file_upload input" ).triggerHandler( "change" );
 });
-function lookup(inputString) {
-    if (inputString.length == 0) {
-        $('#search-results').fadeOut();
-    } else {
-        $.post("/?route=user&action=search", {
-            queryString: inputString
-        }, function (data) {
-            results = $('#search-results');
-            results.fadeIn();
-            results.html(data);
-        });
-    }
-}

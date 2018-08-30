@@ -16,13 +16,13 @@ class Response
 		$this->twig = new \Twig_Environment($loader, array(
 			'cache' => false, //ROOT.'/cache/twig/',
 		));
-        $twigFunction = new \Twig_SimpleFunction('FavoriteManager', function($isFavorite,$user,$favoriteId) {
-            FavoriteManager::$isFavorite($user,$favoriteId);
+        $twigFunction = new \Twig_Function('FavoriteManager', function($isFavorite,$user,$favoriteId) {
+            return FavoriteManager::$isFavorite($user,$favoriteId);
         });
         $this->twig->addFunction($twigFunction);
 	}
 
-	public function jsonFromArray(array $data)
+	public function json(array $data)
 	{
 		Headers::set()->contentType(ContentTypes::JSON);
 		exit(json_encode($data, JSON_PRETTY_PRINT));

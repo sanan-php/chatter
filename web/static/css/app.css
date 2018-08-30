@@ -53,6 +53,7 @@ div#form-container div, div#main-container div {
 div#main-container div.block {
     border-bottom: 1px solid #bcbabc;
     line-height: 40px;
+    position: relative;
 }
 div.label {
     color: #a5a5a5;
@@ -78,6 +79,7 @@ div#form-container input, div#main-container select, div#main-container input{
 div#form-container, div#main-container {
     width: 100%;
     margin: auto auto;
+    padding-top:20px;
     font-family: "arial","helvetica","sans-serif";
     max-width: 460px;
     min-width: 460px;
@@ -349,7 +351,7 @@ div#form-container img, div#main-container img, div#chat-container img, .header-
     box-shadow: 0 1px 0 0 #fff inset;
     margin-left: 1em;
 }
-#addFavorite, #removeFavorite {
+#favorite{
     height: 20px;
     width: 20px;
     display: block;
@@ -359,7 +361,12 @@ div#form-container img, div#main-container img, div#chat-container img, .header-
     right: 10%;
     background: url('/static/img/favorites.png') no-repeat;
     background-size: calc(95% + 1px);
+    cursor: pointer;
 }
-#removeFavorite {
+#favorite.delete {
     opacity: .6;
+}
+
+.block #favorite {
+    top: 27.6% !important;
 }

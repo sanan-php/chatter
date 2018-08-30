@@ -9,7 +9,7 @@
 		{% include '@app/blocks/header.left.menu.twig' with {'links':links,'labels':labels} %}
 	</span>
 	<span class="right">
-		{% include '@app/blocks/header.right.menu.twig' with {'links':links,'labels':labels,'userName':currentUser.getName()} %}
+		{% include '@app/blocks/header.right.menu.twig' with {'links':links,'labels':labels,'userName':user.getName()} %}
 	</span>
 </div>
 <div id="wrapper">

@@ -174,7 +174,7 @@ class UserController extends BaseController
             $list[] = $user;
         }
         if($isAjax) {
-            $this->response->jsonFromArray([
+            $this->response->json([
                'find' => $list
             ]);
         }

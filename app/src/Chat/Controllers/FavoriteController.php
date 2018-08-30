@@ -5,6 +5,7 @@ namespace Chat\Controllers;
 
 use Chat\Core\Headers;
 use Chat\Core\ServiceBinder;
+use Chat\Entity\User;
 use Chat\Managers\FavoriteManager;
 
 class FavoriteController extends BaseController
@@ -23,27 +24,27 @@ class FavoriteController extends BaseController
      */
     public function getCreate()
     {
-        $add = $this->request->post('add');
+        $uid = $this->request->post('favoriteId');
         if(!$this->tryAuth(false)) {
             Headers::set()->forbidden();
-            $this->response->jsonFromArray([
+            $this->response->json([
                 'error' => $this->l10n['main']['forbidden'],
             ]);
         }
         if(!$this->isPostQuery()) {
             Headers::set()->conflict();
-            $this->response->jsonFromArray([
+            $this->response->json([
                 'errorMess' => $this->l10n['main']['conflict']
             ]);
         }
-        $result = $this->manager->create($this->getCurrentUser(), $add);
+        $result = $this->manager->create($this->getCurrentUser(), $uid);
         if(!$result) {
             Headers::set()->conflict();
-            $this->response->jsonFromArray([
+            $this->response->json([
                 'errorMess' => $this->l10n['favorites']['notCreated']
             ]);
         }
-        $this->response->jsonFromArray([
+        $this->response->json([
             'success' => true,
             'content' => json_decode($result, true)
         ]);
@@ -51,27 +52,27 @@ class FavoriteController extends BaseController
 
     public function getDelete()
     {
-        $add = $this->request->post('add');
-        if(!$this->tryAuth(false)) {
+        $uid = $this->request->post('favoriteId');
+        if (!$this->tryAuth(false)) {
             Headers::set()->forbidden();
-            $this->response->jsonFromArray([
+            $this->response->json([
                 'error' => $this->l10n['main']['forbidden'],
             ]);
         }
-        if(!$this->isPostQuery()) {
+        if (!$this->isPostQuery()) {
             Headers::set()->conflict();
-            $this->response->jsonFromArray([
+            $this->response->json([
                 'errorMess' => $this->l10n['main']['conflict']
             ]);
         }
-        $result = $this->manager->delete($this->getCurrentUser()->getId(), $add);
-        if(!$result) {
+        $result = $this->manager->delete($this->getCurrentUser(), $uid);
+        if (!$result) {
             Headers::set()->conflict();
-            $this->response->jsonFromArray([
+            $this->response->json([
                 'errorMess' => $this->l10n['favorites']['notDeleted']
             ]);
         }
-        $this->response->jsonFromArray([
+        $this->response->json([
             'success' => true,
             'content' => json_decode($result, true)
         ]);
@@ -88,6 +89,7 @@ class FavoriteController extends BaseController
         $userId = $this->getCurrentUser()->getId();
         $endPosition = (int) $this->request->get('endPosition');
         $startPosition = (int) $this->request->get('startPosition');
+        /** @var User[] $favorites */
         $favorites = $this->manager->getAll($userId, $endPosition, $startPosition);
         $this->response->render('favorite:getAll', [
             'currentUser' => $this->getCurrentUser(),
