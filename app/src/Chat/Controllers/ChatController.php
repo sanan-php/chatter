@@ -23,14 +23,11 @@ class ChatController extends BaseController
 			$this->response->redirect(Url::createLinkToAction('user', 'all'));
 		}
 		$params = [
-		    'user' => $this->getCurrentUser(),
-			'labels' => $this->l10n['chatPage'],
-			'links' => [
-				'allUsers' => Url::createLinkToAction('user','all'),
-				'profile' => Url::createLinkToAction('user','profile'),
-				'logout' => Url::createLinkToAction('user','logout'),
-                'newMessageCreate' => Url::createLinkToAction('message','create')
-			],
+		    'currentUser' => $this->getCurrentUser(),
+			'labels' => array_merge($this->l10n['main'],$this->l10n['chatPage']),
+			'links' => array_merge($this->mainLinks(),[
+                'newMessageCreate' => Url::createLinkToAction('message','create'),
+			]),
 			'currentContact' => $this->userManager->getById($with),
             'rand' => random_int(1111,9999),
             'with' => $with

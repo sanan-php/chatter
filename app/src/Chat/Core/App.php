@@ -18,6 +18,12 @@ class App
 		$this->response = ServiceBinder::bind(Response::class);
 	}
 
+    /**
+     * @return mixed
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
 	public function run()
 	{
 		$route= ucfirst($this->request->get(Reference::CONTROLLER_QUERY_PARAM));

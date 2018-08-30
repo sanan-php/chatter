@@ -1,0 +1,9 @@
+{% if FavoriteManager('isFavorite',user, favId) %}
+    <span id="removeFavorite">
+        <input type="hidden" id="favoriteId" value="{{ favId }}">
+    </span>
+{% else %}
+    <span id="addFavorite">
+        <input type="hidden" id="favoriteId" value="{{ favId }}">
+    </span>
+{% endif %}

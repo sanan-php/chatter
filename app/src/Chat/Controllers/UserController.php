@@ -26,7 +26,7 @@ class UserController extends BaseController
 			$login = $this->request->post('login');
 			$pass = $this->request->post('password');
 			$params = [
-				'labels' => $this->l10n['regPage'],
+				'labels' => array_merge($this->l10n['main'],$this->l10n['regPage']),
 				'links' => [
 					'reg' => Url::createLinkToAction('user','registration'),
 					'login' => Url::createLinkToAction('user','login'),
@@ -42,7 +42,7 @@ class UserController extends BaseController
                 $params['error'] = $this->l10n['regPage']['error'].' Пароль содержит меньше 8 знаков.';
                 $this->response->render('user:reg', $params);
             }
-			$dto = new UserDto($name, $login, $pass, $this->geo->get_value('city'));
+			$dto = new UserDto($name, $login, $pass);
 			/** @var User $user */
 			$user = $this->userManager->create($dto);
 			if(!$user) {
@@ -52,7 +52,7 @@ class UserController extends BaseController
 			$this->userManager->authorize($user);
 		}
 		$this->response->render('user:reg',[
-			'labels' => $this->l10n['regPage'],
+			'labels' => array_merge($this->l10n['main'],$this->l10n['regPage']),
             'links' => [
                 'reg' => Url::createLinkToAction('user','registration'),
                 'login' => Url::createLinkToAction('user','login'),
@@ -77,7 +77,7 @@ class UserController extends BaseController
 				'login' => Url::createLinkToAction('user','login'),
 				'reg' => Url::createLinkToAction('user','registration')
 			],
-			'labels' => $this->l10n['authPage'],
+			'labels' => array_merge($this->l10n['main'],$this->l10n['authPage']),
 		];
 		if($this->isPostQuery()) {
 			$login = $this->request->post('login');
@@ -113,12 +113,8 @@ class UserController extends BaseController
 		$this->response->render('user:allUsers', [
 			'currentUser' => $this->getCurrentUser(),
 			'users' => $this->userManager->getAll($limit, $offset, true),
-			'links' => [
-				'profile' => Url::createLinkToAction('user','profile'),
-				'logout' => Url::createLinkToAction('user','logout'),
-				'chat' => Url::createLinkToAction('chat','private'),
-			],
-			'labels' => $this->l10n['allUsers']
+			'links' => $this->mainLinks(),
+			'labels' => $this->l10n['main'],
 		]);
 	}
 
@@ -133,13 +129,9 @@ class UserController extends BaseController
 		$this->tryAuth();
 		$params = [
 			'rand' => false,
-			'labels' => $this->l10n['profile'],
+			'labels' => array_merge($this->l10n['main'],$this->l10n['profile']),
 			'user' => $this->getCurrentUser(),
-			'links' => [
-				'allUsers' => Url::createLinkToAction('user','all'),
-				'logout' => Url::createLinkToAction('user','logout'),
-				'profile' => Url::createLinkToAction('user','profile')
-			]
+			'links' => $this->mainLinks(),
 		];
 		if($this->isPostQuery()) {
 			$name = (string) $this->request->post('name');
@@ -189,12 +181,8 @@ class UserController extends BaseController
         $this->response->render('user:searchResults', [
             'currentUser' => $this->getCurrentUser(),
             'users' => $list,
-            'links' => [
-                'profile' => Url::createLinkToAction('user','profile'),
-                'logout' => Url::createLinkToAction('user','logout'),
-                'chat' => Url::createLinkToAction('chat','private'),
-            ],
-            'labels' => $this->l10n['allUsers']
+            'links' => $this->mainLinks(),
+            'labels' => $this->l10n['main']
         ]);
     }
 }

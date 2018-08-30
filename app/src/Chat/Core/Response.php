@@ -2,6 +2,8 @@
 
 namespace Chat\Core;
 
+use Chat\Managers\FavoriteManager;
+
 class Response
 {
 	/** @var \Twig_Environment */
@@ -14,6 +16,10 @@ class Response
 		$this->twig = new \Twig_Environment($loader, array(
 			'cache' => false, //ROOT.'/cache/twig/',
 		));
+        $twigFunction = new \Twig_SimpleFunction('FavoriteManager', function($isFavorite,$user,$favoriteId) {
+            FavoriteManager::$isFavorite($user,$favoriteId);
+        });
+        $this->twig->addFunction($twigFunction);
 	}
 
 	public function jsonFromArray(array $data)

@@ -4,18 +4,15 @@
 </head>
 <body>
 <div class="header-menu">
+    {% include '@app/blocks/search.twig' with {"userSearch": labels.userSearch }  %}
 	<span class="left">
+		<a href="{{ links.favorites }}">
+			<img src="/static/img/favorites.png" width="25" height="25" align="absmiddle">
+			{{ labels.favorites }}
+		</a>
 	</span>
-	{% include '@app/blocks/search.twig' with {"userSearch": labels.userSearch }  %}
 	<span class="right">
-		<a href="{{ links.profile }}">
-			{% include '@app/blocks/userPic.twig' with {"user": currentUser, "size": 30 } %}
-            {{ currentUser.getName() }} {{ labels.profile }}
-		</a>
-		<a href="{{ links.logout }}">
-			<img src="/static/img/logout.png" width="20" height="20" align="absmiddle">
-			{{ labels.exit }}
-		</a>
+		{% include '@app/blocks/header.right.menu.twig' with {'links':links,'labels':labels,'userName':currentUser.getName()} %}
 	</span>
 </div>
 <div id="wrapper">
@@ -24,9 +21,10 @@
 			<div class="block">
 				{% include '@app/blocks/userPic.twig' with {"user": user, "size": 55 } %}
 				{% if currentUser.getId() != user.getId() %}
-						<a href="/with/{{ user.getId() }}">{{ user.getName() }}</a>
-					{% else %}
-						<a href="#">{{ user.getName() }}</a>
+                    <a href="/with/{{ user.getId() }}">{{ user.getName() }}</a>
+                    {% include '@app/blocks/check.favorite.twig' with {"user": currentUser, "favId": user.getId() } %}
+                {% else %}
+                    <a href="#">{{ user.getName() }}</a>
 				{% endif %}
 			</div>
 		{% endfor %}

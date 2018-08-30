@@ -6,16 +6,10 @@
 <div class="header-menu">
     {% include '@app/blocks/search.twig'  with {"userSearch": labels.userSearch } %}
 	<span class="left">
-		<a href="{{ links.allUsers }}">
-			<img src="/static/img/chatNow.png" width="25" height="25" align="absmiddle">
-			{{ labels.usersList }}
-		</a>
+		{% include '@app/blocks/header.left.menu.twig' with {'links':links,'labels':labels} %}
 	</span>
 	<span class="right">
-		<a href="{{ links.logout }}">
-			<img src="/static/img/logout.png" width="20" height="20" align="absmiddle">
-			{{ labels.exit }}
-		</a>
+		{% include '@app/blocks/header.right.menu.twig' with {'links':links,'labels':labels,'userName':currentUser.getName()} %}
 	</span>
 </div>
 <div id="wrapper">
@@ -34,10 +28,6 @@
 				{{ labels.email }}:
 			</div>
 			<div class="block">{{ user.getEmail() }}</div>
-			<div class="label">
-                {{ labels.location }}:
-			</div>
-			<div class="block">{{ user.getLocation() }}&nbsp;</div>
 			<div class="label">
 				{{ labels.userpic }}:
 			</div>

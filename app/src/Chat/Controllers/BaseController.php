@@ -83,4 +83,15 @@ abstract class BaseController
         fwrite($instance, "{'$entity':$message}\n");
 
     }
+
+    protected function mainLinks()
+    {
+        return [
+            'allUsers' => Url::createLinkToAction('user','all'),
+            'profile' => Url::createLinkToAction('user','profile'),
+            'logout' => Url::createLinkToAction('user','logout'),
+            'favorites' => Url::createLinkToAction('favorite','all'),
+            'chat' => Url::createLinkToAction('chat','private')
+        ];
+    }
 }

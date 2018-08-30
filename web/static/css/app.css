@@ -349,3 +349,17 @@ div#form-container img, div#main-container img, div#chat-container img, .header-
     box-shadow: 0 1px 0 0 #fff inset;
     margin-left: 1em;
 }
+#addFavorite, #removeFavorite {
+    height: 20px;
+    width: 20px;
+    display: block;
+    float: left;
+    position: absolute;
+    top: 42%;
+    right: 10%;
+    background: url('/static/img/favorites.png') no-repeat;
+    background-size: calc(95% + 1px);
+}
+#removeFavorite {
+    opacity: .6;
+}

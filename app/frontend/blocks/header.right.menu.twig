@@ -1,0 +1,8 @@
+<a href="{{ links.profile }}">
+    {% include '@app/blocks/userPic.twig' with {"user": user, "size": 30 } %}
+    {{ userName }} {{ labels.profile }}
+</a>
+<a href="{{ links.logout }}">
+    <img src="/static/img/logout.png" width="20" height="20" align="absmiddle">
+    {{ labels.exit }}
+</a>

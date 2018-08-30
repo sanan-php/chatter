@@ -3,7 +3,6 @@
 namespace Chat\Controllers;
 
 use Chat\Core\Headers;
-use Chat\Core\Reference;
 use Chat\Core\ServiceBinder;
 use Chat\Entity\Message;
 use Chat\Managers\MessageManager;
@@ -33,7 +32,7 @@ class MessageController extends BaseController
 		if(!$this->isPostQuery()) {
 			Headers::set()->conflict();
 			$this->response->jsonFromArray([
-				'errorMess' => $this->l10n['messages']['conflict']
+				'errorMess' => $this->l10n['main']['conflict']
 			]);
 		}
 		$message = base64_decode($this->request->post('message'));

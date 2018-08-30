@@ -82,17 +82,20 @@ class Db
         return $items;
     }
 
-	public function getList($entity, $group, $endPosition = 30, $startPosition = 0)
+	public function getList($entity, $item, $endPosition = 30, $startPosition = 0)
 	{
-	    if($endPosition === 0){
+	    if($endPosition > 0 && $endPosition < 30){
 	        $endPosition = 30;
         }
-        $length = $this->db->llen($entity . ':' . $group);
+        $length = $this->db->llen($entity . ':' . $item);
+	    if($endPosition === 0) {
+	        $endPosition = $length;
+        }
         if($length > $endPosition) {
             $startPosition = $length - $endPosition;
             $endPosition = $length;
         }
-		$content = $this->db->lrange($entity . ':'. $group, $startPosition, $endPosition);
+		$content = $this->db->lrange($entity . ':'. $item, $startPosition, $endPosition);
 		if(!\count($content)) {
 			return false;
 		}
@@ -106,14 +109,24 @@ class Db
 		return $items;
 	}
 
-	public function setList(string $entity, string $group, $content)
+	public function setList(string $entity, string $item, $content)
 	{
-		$result = $this->db->lpush($entity.':'.$group, $this->serializer->serialize($content,ContentTypes::SAVED_DATA_TYPE));
+		$result = $this->db->lpush($entity.':'.$item, $this->serializer->serialize($content,ContentTypes::SAVED_DATA_TYPE));
 		if($result === 0) {
 		    return false;
         }
-        $this->db->publish($entity, $group);
+        $this->db->publish($entity, $item);
 
         return $content;
 	}
+
+	public function delListItem(string $entity, string $item, $contentForRemoving)
+    {
+        $result = $this->db->lrem($entity.':'.$item,-1, $contentForRemoving );
+        if($result !== 1) {
+            return false;
+        }
+
+        return true;
+    }
 }
