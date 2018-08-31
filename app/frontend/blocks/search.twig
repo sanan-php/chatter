@@ -1,4 +1,6 @@
 <span class="search-users">
-    <input type="text" id="search-field" placeholder="{{ userSearch }}">
-    <span id="search-button"></span>
+    <form action="{{ action }}" method="post" id="search-form">
+        <input type="text" id="search-field" name="queryString" placeholder="{{ userSearch }}">
+        <span id="search-button"></span>
+    </form>
 </span>

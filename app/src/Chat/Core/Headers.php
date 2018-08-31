@@ -31,9 +31,9 @@ class Headers
 	}
 
 	public function conflict()
-    {
-        header($_SERVER['SERVER_PROTOCOL'] . ' 409 Conflict');
-    }
+	{
+		header($_SERVER['SERVER_PROTOCOL'] . ' 409 Conflict');
+	}
 
 	public function redirect(string $url)
 	{

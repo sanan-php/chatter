@@ -6,7 +6,7 @@
 </head>
 <body>
 <div class="header-menu">
-    {% include '@app/blocks/search.twig' with {"userSearch": labels.userSearch } %}
+    {% include '@app/blocks/search.twig' with {"userSearch": labels.userSearch, 'action': links.searchAction } %}
     <span class="left">
         {% include '@app/blocks/header.left.menu.twig' with {'links':links,'labels':labels} %}
     </span>

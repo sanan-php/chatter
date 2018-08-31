@@ -2,7 +2,6 @@
 
 namespace Chat\Managers;
 
-use Chat\Core\Headers;
 use Chat\Core\Reference;
 use Chat\Core\SavingTimes;
 use Chat\DTO\UserDto;
@@ -77,7 +76,6 @@ class UserManager extends AbstractManager
 		$hash = $this->hashGen($user->getId(), $user->getEmail());
 		setcookie(Reference::UID_COOKIE,$user->getId(),strtotime(SavingTimes::AUTH),'/',HOST);
 		setcookie(Reference::HASH_COOKIE,$hash,strtotime(SavingTimes::AUTH),'/',HOST);
-		Headers::set()->redirect('/');
 	}
 
 	public function checkUser(string $login, string $pass)
@@ -87,12 +85,10 @@ class UserManager extends AbstractManager
 			return false;
 		}
 		if(!\in_array($user->getPass(), [$this->passHash($pass), $this->passHash($pass,true)],false)) {
-            Logger::write('Неверный пароль: ' . $login . ';' . __LINE__ . ';' . __CLASS__);
-            return false;
+			Logger::write('Неверный пароль: ' . $login . ';' . __LINE__ . ';' . __CLASS__);
+			return false;
 		}
-		$hash = $this->hashGen($user->getId(), $user->getEmail());
-		setcookie(Reference::UID_COOKIE,$user->getId(),strtotime(SavingTimes::AUTH),'/',HOST);
-		setcookie(Reference::HASH_COOKIE,$hash,strtotime(SavingTimes::AUTH),'/',HOST);
+		$this->authorize($user);
 
 		return true;
 	}
@@ -128,10 +124,10 @@ class UserManager extends AbstractManager
 
 	public function passHash(string $pass, $old = false)
 	{
-	    if($old === true) {
-	        return sha1(md5($pass.SALT));
-        }
-
+		if($old === true) {
+			return sha1(md5($pass.SALT));
+		}
+		
 		return hash('sha256', $pass.SALT);
 	}
 
@@ -168,7 +164,7 @@ class UserManager extends AbstractManager
 	/**
 	 * @param int $limit
 	 * @param int $offset
-     * @param bool $shuffle
+	 * @param bool $shuffle
 	 * @return User[]
 	 */
 	public function getAll(int $limit = 30, $offset = 0, $shuffle = false)

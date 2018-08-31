@@ -91,7 +91,8 @@ abstract class BaseController
             'profile' => Url::createLinkToAction('user','profile'),
             'logout' => Url::createLinkToAction('user','logout'),
             'favorites' => Url::createLinkToAction('favorite','all'),
-            'chat' => Url::createLinkToAction('chat','private')
+            'chat' => Url::createLinkToAction('chat','private'),
+            'searchAction' => Url::createLinkToAction('user','search')
         ];
     }
 }

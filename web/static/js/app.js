@@ -59,6 +59,9 @@ $(function(){
             }
         });
     });
+    $('#search-button').click(function () {
+       $('#search-form').submit();
+    });
 });
 $( window ).resize(function(){
     $( ".file_upload input" ).triggerHandler( "change" );

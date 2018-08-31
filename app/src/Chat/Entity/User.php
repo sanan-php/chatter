@@ -27,19 +27,19 @@ class User extends Item
 	 * @Annotation\Type("string")
 	 */
 	private $pic;
-
+	
 	/**
 	 * @Annotation\Type("int")
 	 */
 	private $sex;
-
-    /**
-     * @Annotation\Type("int")
-     */
+	
+	/**
+	 * @Annotation\Type("int")
+	 */
 	private $birthDate;
-    /**
-     * @Annotation\Type("string")
-     */
+	/**
+	 * @Annotation\Type("string")
+	 */
 	private $location;
 
 	/**
@@ -59,7 +59,7 @@ class User extends Item
 	{
 		return $this->name;
 	}
-
+	
 	/**
 	 * @param string $name
 	 */
@@ -67,7 +67,7 @@ class User extends Item
 	{
 		$this->name = $name;
 	}
-
+	
 	/**
 	 * @return string
 	 */
@@ -75,7 +75,7 @@ class User extends Item
 	{
 		return $this->email;
 	}
-
+	
 	/**
 	 * @param string $email
 	 */
@@ -83,7 +83,7 @@ class User extends Item
 	{
 		$this->email = $email;
 	}
-
+	
 	/**
 	 * @return string
 	 */
@@ -91,7 +91,7 @@ class User extends Item
 	{
 		return $this->pass;
 	}
-
+	
 	/**
 	 * @param string $pass
 	 */
@@ -99,7 +99,7 @@ class User extends Item
 	{
 		$this->pass = $pass;
 	}
-
+	
 	/**
 	 * @return mixed
 	 */
@@ -107,7 +107,7 @@ class User extends Item
 	{
 		return $this->pic;
 	}
-
+	
 	/**
 	 * @param mixed $pic
 	 */
@@ -115,7 +115,7 @@ class User extends Item
 	{
 		$this->pic = $pic;
 	}
-
+	
 	/**
 	 * @return mixed
 	 */
@@ -123,7 +123,7 @@ class User extends Item
 	{
 		return $this->sex;
 	}
-
+	
 	/**
 	 * @param mixed $sex
 	 */
@@ -131,45 +131,45 @@ class User extends Item
 	{
 		$this->sex = $sex;
 	}
-
-
-    /**
-     * @param mixed $id
-     */
-    public function setId($id): void
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBirthDate()
-    {
-        return $this->birthDate;
-    }
-
-    /**
-     * @param mixed $birthDate
-     */
-    public function setBirthDate($birthDate): void
-    {
-        $this->birthDate = $birthDate;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLocation()
-    {
-        return $this->location;
-    }
-
-    /**
-     * @param mixed $location
-     */
-    public function setLocation($location): void
-    {
-        $this->location = $location;
-    }
+	
+	
+	/**
+	 * @param mixed $id
+	 */
+	public function setId($id): void
+	{
+		$this->id = $id;
+	}
+	
+	/**
+	 * @return mixed
+	 */
+	public function getBirthDate()
+	{
+		return $this->birthDate;
+	}
+	
+	/**
+	 * @param mixed $birthDate
+	 */
+	public function setBirthDate($birthDate): void
+	{
+		$this->birthDate = $birthDate;
+	}
+	
+	/**
+	 * @return mixed
+	 */
+	public function getLocation()
+	{
+		return $this->location;
+	}
+	
+	/**
+	 * @param mixed $location
+	 */
+	public function setLocation($location): void
+	{
+		$this->location = $location;
+	}
 }

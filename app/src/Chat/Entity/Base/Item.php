@@ -25,8 +25,8 @@ abstract class Item
 		$this->id = $id;
 	}
 
-    /**
-     * @return string
-     */
-    abstract public static function getEntityName() : string;
+	/**
+	 * @return string
+	 */
+	abstract public static function getEntityName() : string;
 }

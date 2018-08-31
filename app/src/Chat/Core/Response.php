@@ -14,12 +14,12 @@ class Response
 		$loader = new \Twig_Loader_Filesystem(Paths::TPL_PATH);
 		$loader->setPaths(Paths::TPL_PATH,'app');
 		$this->twig = new \Twig_Environment($loader, array(
-			'cache' => false, //ROOT.'/cache/twig/',
+			'cache' => ROOT.'/cache/twig/',
 		));
-        $twigFunction = new \Twig_Function('FavoriteManager', function($isFavorite,$user,$favoriteId) {
-            return FavoriteManager::$isFavorite($user,$favoriteId);
-        });
-        $this->twig->addFunction($twigFunction);
+		$twigFunction = new \Twig_Function('FavoriteManager', function($isFavorite,$user,$favoriteId) {
+		    return FavoriteManager::$isFavorite($user,$favoriteId);
+		});
+		$this->twig->addFunction($twigFunction);
 	}
 
 	public function json(array $data)
@@ -37,26 +37,26 @@ class Response
 	 */
 	public function render(string $template, array $params = [])
 	{
-	    $template = str_replace(':','/',$template).'.twig';
+		$template = str_replace(':','/',$template).'.twig';
 		exit($this->twig->render($template, $params));
 	}
 
-    /**
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
-     */
+	/**
+	* @throws \Twig_Error_Loader
+	* @throws \Twig_Error_Runtime
+	* @throws \Twig_Error_Syntax
+	*/
 	public function notFound()
 	{
 		Headers::set()->notFound();
 		$this->render('error:notFound');
 	}
 
-    /**
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
-     */
+	/**
+	* @throws \Twig_Error_Loader
+	* @throws \Twig_Error_Runtime
+	* @throws \Twig_Error_Syntax
+	*/
 	public function forbidden()
 	{
 		Headers::set()->forbidden();

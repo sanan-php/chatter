@@ -9,12 +9,11 @@ use Chat\Helpers\Url;
 
 class UserController extends BaseController
 {
-
-    /**
+	/**
 	 * @throws \Twig_Error_Loader
 	 * @throws \Twig_Error_Runtime
 	 * @throws \Twig_Error_Syntax
-     * @throws \Exception
+	 * @throws \Exception
 	 */
 	public function getRegistration()
 	{
@@ -39,9 +38,9 @@ class UserController extends BaseController
 				$this->response->render('user:reg', $params);
 			}
 			if(\strlen($pass) < 8) {
-                $params['error'] = $this->l10n['regPage']['error'].' Пароль содержит меньше 8 знаков.';
-                $this->response->render('user:reg', $params);
-            }
+				$params['error'] = $this->l10n['regPage']['error'].' Пароль содержит меньше 8 знаков.';
+				$this->response->render('user:reg', $params);
+			}
 			$dto = new UserDto($name, $login, $pass);
 			/** @var User $user */
 			$user = $this->userManager->create($dto);
@@ -50,13 +49,14 @@ class UserController extends BaseController
 				$this->response->render('user:reg', $params);
 			}
 			$this->userManager->authorize($user);
+			Headers::set()->redirect('/');
 		}
 		$this->response->render('user:reg',[
 			'labels' => array_merge($this->l10n['main'],$this->l10n['regPage']),
-            'links' => [
-                'reg' => Url::createLinkToAction('user','registration'),
-                'login' => Url::createLinkToAction('user','login'),
-            ],
+			'links' => [
+				'reg' => Url::createLinkToAction('user','registration'),
+				'login' => Url::createLinkToAction('user','login'),
+			],
 			'name' => '',
 			'email' => '',
 		]);
@@ -150,39 +150,39 @@ class UserController extends BaseController
 		$this->response->render('user:profile', $params);
 	}
 
-    /**
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
-     */
+	/**
+	* @throws \Twig_Error_Loader
+	* @throws \Twig_Error_Runtime
+	* @throws \Twig_Error_Syntax
+	*/
 	public function getSearch()
-    {
-        $param = $this->request->post('queryString');
-        $isAjax = $this->request->post('isAjax');
-        if(!$this->tryAuth(false)) {
-            Headers::set()->forbidden();
-            $this->response->forbidden();
-        }
-        $limit = (int) $this->request->get('limit');
-        $offset = (int) $this->request->get('offset');
-        $allUsers = $this->userManager->getAll($limit,$offset);
-        $list = [];
-        foreach ($allUsers as $user) {
-            if(!\in_array($param,[$user->getName(),$user->getEmail()])) {
-                continue;
-            }
-            $list[] = $user;
-        }
-        if($isAjax) {
-            $this->response->json([
-               'find' => $list
-            ]);
-        }
-        $this->response->render('user:searchResults', [
-            'currentUser' => $this->getCurrentUser(),
-            'users' => $list,
-            'links' => $this->mainLinks(),
-            'labels' => $this->l10n['main']
-        ]);
-    }
+	{
+		$param = $this->request->post('queryString');
+		$isAjax = $this->request->post('isAjax');
+		if(!$this->tryAuth(false)) {
+		    Headers::set()->forbidden();
+		    $this->response->forbidden();
+		}
+		$limit = (int) $this->request->get('limit');
+		$offset = (int) $this->request->get('offset');
+		$allUsers = $this->userManager->getAll($limit,$offset);
+		$list = [];
+		foreach ($allUsers as $user) {
+		    if(!\in_array($param,[$user->getName(),$user->getEmail()],false)) {
+			continue;
+		    }
+		    $list[] = $user;
+		}
+		if($isAjax) {
+		    $this->response->json([
+		       'find' => $list
+		    ]);
+		}
+		$this->response->render('user:allUsers', [
+		    'currentUser' => $this->getCurrentUser(),
+		    'users' => $list,
+		    'links' => $this->mainLinks(),
+		    'labels' => $this->l10n['main']
+		]);
+	}
 }

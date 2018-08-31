@@ -12,7 +12,7 @@ class Finder
 		if ($sort === 0) {
 			unset($list[0],$list[1]);
 		} else {
-			unset($list[\count($list)-1], $list[\count($list)-1]);
+            unset($list[\count($list)-1], $list[\count($list)-1]);
 		}
 		$entities = [];
 		foreach ($list as $id => $filename) {

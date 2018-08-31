@@ -19,12 +19,12 @@ class MessageController extends BaseController
 	}
 
 	/**
-     * Написать сообщение
-	 * @throws \Exception
-	 */
+	* Написать сообщение
+	* @throws \Exception
+	*/
 	public function getCreate()
 	{
-        $to = $this->request->post('to');
+		$to = $this->request->post('to');
 		if(!$this->tryAuth(false)) {
 			Headers::set()->forbidden();
 			$this->response->forbidden();
@@ -38,57 +38,49 @@ class MessageController extends BaseController
 		$message = base64_decode($this->request->post('message'));
 		$result = $this->messageManager->create($this->getCurrentUser()->getId(), $to, $message);
 		if(!$result) {
-            Headers::set()->conflict();
+			Headers::set()->conflict();
 			$this->response->json([
 				'errorMess' => $this->l10n['messages']['notCreated']
 			]);
 		}
-        $this->sendToSocket('Message',$result);
+		$this->sendToSocket('Message',$result);
 		$this->response->json([
-		    'success' => true,
-            'content' => json_decode($result, true)
-        ]);
+			'success' => true,
+			'content' => json_decode($result, true)
+		]);
 	}
-
-    /**
-     * Список пользователей, с которыми есть переписка
-     */
-	public function getList()
-    {
-
-    }
-
-    /**
-     * Переписка с пользователем
-     *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
-     */
+	
+	/**
+	* Переписка с пользователем
+	*
+	* @throws \Twig_Error_Loader
+	* @throws \Twig_Error_Runtime
+	* @throws \Twig_Error_Syntax
+	*/
 	public function getAll()
 	{
-        if(!$this->tryAuth(false)) {
-            Headers::set()->forbidden();
-            $this->response->forbidden();
-        }
-        $to = $this->request->post('to');
+		if(!$this->tryAuth(false)) {
+			Headers::set()->forbidden();
+			$this->response->forbidden();
+		}
+		$to = $this->request->post('to');
 		$endPosition = (int) $this->request->get('endPosition');
 		$startPosition = (int) $this->request->get('startPosition');
 		/** @var Message[] $result */
 		$result = $this->messageManager->getMessages($this->getCurrentUser()->getId(), $to, $endPosition, $startPosition);
-        $result2 = $this->messageManager->getMessages($to, $this->getCurrentUser()->getId(), $endPosition, $startPosition);
+		$result2 = $this->messageManager->getMessages($to, $this->getCurrentUser()->getId(), $endPosition, $startPosition);
 		if(!$result && !$result2) {
-            $this->response->json([
-                'errorMess' => $this->l10n['messages']['messagesNotFound'] . ';' . $to
-            ]);
-        }
+			$this->response->json([
+				'errorMess' => $this->l10n['messages']['messagesNotFound'] . ';' . $to
+			]);
+		}
 		$messages = $this->convertToArray($result);
 		$temp = $this->convertToArray($result2);
 		if(\count($temp) && \count($messages)) {
 		    $messages = array_merge($messages,$temp);
-        } elseif(\count($temp)) {
+		} elseif(\count($temp)) {
 		    $messages = $temp;
-        }
+		}
 		$messages = $this->sortMessages($messages);
 		$this->response->json([
 			'content' => $messages
@@ -96,34 +88,33 @@ class MessageController extends BaseController
 	}
 
 	private function convertToArray($result)
-    {
-        $messages = [];
-        foreach ($result as $item) {
-            if(!($item instanceof Message)) {
-                continue;
-            }
-            $messages[] = [
-                'id' => $item->getId(),
-                'from' => (string) $item->getFrom(),
-                'to' => (string) $item->getTo(),
-                'text' => $item->getMessage(),
-                'createdAt' => date('d.m.Y H:i:s', strtotime($item->getCreatedAt())),
-                'timestamp' => strtotime($item->getCreatedAt())
-            ];
-        }
+	{
+		$messages = [];
+		foreach ($result as $item) {
+			if(!($item instanceof Message)) {
+				continue;
+			}
+			$messages[] = [
+				'id' => $item->getId(),
+				'from' => (string) $item->getFrom(),
+				'to' => (string) $item->getTo(),
+				'text' => $item->getMessage(),
+				'createdAt' => date('d.m.Y H:i:s', strtotime($item->getCreatedAt())),
+				'timestamp' => strtotime($item->getCreatedAt())
+			];
+		}
+		return $messages;
+	}
+	
+	private function sortMessages($messages)
+	{
+		$createdAt = array_column($messages,'timestamp');
+		$byCreated = [];
+		foreach ($createdAt as $item) {
+			$byCreated[] = $item;
+		}
+		array_multisort($byCreated,SORT_NUMERIC,SORT_ASC, $messages);
 
-        return $messages;
-    }
-
-    private function sortMessages($messages)
-    {
-        $createdAt = array_column($messages,'timestamp');
-        $byCreated = [];
-        foreach ($createdAt as $item) {
-            $byCreated[] = $item;
-        }
-        array_multisort($byCreated,SORT_NUMERIC,SORT_ASC, $messages);
-
-        return $messages;
-    }
+		return $messages;
+	}
 }

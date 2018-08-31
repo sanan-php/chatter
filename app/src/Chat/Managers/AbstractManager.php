@@ -8,13 +8,13 @@ abstract class AbstractManager
 {
 	/** @var Db */
 	protected $db;
-    /** @var \JMS\Serializer\Serializer */
-    protected $serializer;
-
+	/** @var \JMS\Serializer\Serializer */
+	protected $serializer;
+	
 	public function __construct()
 	{
 		$this->db = Db::init();
-        $this->serializer = \JMS\Serializer\SerializerBuilder::create()->build();
+		$this->serializer = \JMS\Serializer\SerializerBuilder::create()->build();
 	}
 
 	/**
