@@ -25,20 +25,20 @@ class FavoriteController extends BaseController
     public function getCreate()
     {
         $uid = $this->request->post('favoriteId');
-        if(!$this->tryAuth(false)) {
+        if (!$this->tryAuth(false)) {
             Headers::set()->forbidden();
             $this->response->json([
                 'error' => $this->l10n['main']['forbidden'],
             ]);
         }
-        if(!$this->isPostQuery()) {
+        if (!$this->isPostQuery()) {
             Headers::set()->conflict();
             $this->response->json([
                 'errorMess' => $this->l10n['main']['conflict']
             ]);
         }
         $result = $this->manager->create($this->getCurrentUser(), $uid);
-        if(!$result) {
+        if (!$result) {
             Headers::set()->conflict();
             $this->response->json([
                 'errorMess' => $this->l10n['favorites']['notCreated']

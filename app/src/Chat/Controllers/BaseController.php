@@ -31,7 +31,7 @@ abstract class BaseController
 		$l10n = ServiceBinder::bind(L10n::class);
 		$this->l10n = $l10n->getContent();
 		$this->userManager = ServiceBinder::bind(UserManager::class);
-		if($this->request->get('from')) {
+		if ($this->request->get('from')) {
 		    $this->response->redirect($this->request->get('from'));
         }
 	}
@@ -45,16 +45,15 @@ abstract class BaseController
 	{
 		$id = $this->request->cookie(Reference::UID_COOKIE);
 		$hash = $this->request->cookie(Reference::HASH_COOKIE);
-		if(!$id && !$hash) {
-			if($redirect) {
-			    Logger::write('Куки не установлены');
+		if (!$id && !$hash) {
+			if ($redirect) {
 				$this->response->redirect(Url::createLinkToAction('user','login'));
 			}
 			return false;
 		}
-		if(!$this->userManager->checkAuth($id, $hash)) {
+		if (!$this->userManager->checkAuth($id, $hash)) {
 			$this->userManager->clearAuth();
-			if($redirect) {
+			if ($redirect) {
 
 				$this->response->redirect(Url::createLinkToAction('user','login'));
 			}
@@ -69,7 +68,7 @@ abstract class BaseController
 	 */
 	protected function getCurrentUser()
 	{
-		if(!$this->tryAuth(false)) {
+		if (!$this->tryAuth(false)) {
 			return false;
 		}
 		$id = $this->request->cookie(Reference::UID_COOKIE);
@@ -77,11 +76,13 @@ abstract class BaseController
 		return $this->userManager->getById($id);
 	}
 
-	protected function sendToSocket(string $entity, string $message)
+	protected function sendToSocket(string $forUser, string $message)
     {
         $instance = stream_socket_client(APP_TCP_SOCKET);
-        fwrite($instance, "{'$entity':$message}\n");
-
+        fwrite($instance, json_encode([
+        	'user' => $forUser,
+        	'message' => $message
+		])."\n");
     }
 
     protected function mainLinks()

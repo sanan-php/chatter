@@ -26,17 +26,17 @@ class MessageManager extends AbstractManager
 	 */
 	public function create(string $from, string $to, string $message)
 	{
-		if(!$this->userManager->getById($from)) {
+		if (!$this->userManager->getById($from)) {
 			return false;
 		}
-		if(!$this->userManager->getById($to)) {
+		if (!$this->userManager->getById($to)) {
 			return false;
 		}
 		$text = htmlspecialchars($message);
 		$message = new Message($from, $to, $text);
 		$message->setId(md5(time()));
 		$result = $this->db->setList('Message', md5($from.$to), $message);
-		if(!$result) {
+		if (!$result) {
 		    return false;
         }
 

@@ -33,10 +33,11 @@ class Db
 	public function getItem($entity, string $item)
 	{
 
-		if(!$this->db->hexists($entity, $item)) {
+		if (!$this->db->hexists($entity, $item)) {
 			Logger::write('Объект не существует : ' . $entity . ';' . $item . ';' . __LINE__ . ';' . __CLASS__);
+			
 			return false;
-        	}
+		}
 
 		return $this->serializer->deserialize($this->db->hget($entity, $item),"Chat\\Entity\\$entity",'json');
 	}
@@ -44,7 +45,7 @@ class Db
 	public function setItem(string $entity, string $id, $content)
 	{
 		$result = $this->db->hset($entity, $id, $this->serializer->serialize($content,'json'));
-		if($result === 0) {
+		if ($result === 0) {
 			return false;
 		}
 		$this->db->publish($entity,$id);
@@ -63,13 +64,13 @@ class Db
 	public function getValues(string $entity, $limit = 30, $offset = 0, $shuffle = false)
 	{
 		$values = $this->db->hvals($entity);
-		if(!\count($values)) {
+		if (!\count($values)) {
 			return false;
 		}
-		if($shuffle) {
+		if ($shuffle) {
 			shuffle($values);
 		}
-		if($limit > 30) {
+		if ($limit > 30) {
 			$values = \array_slice($values, $offset, $limit);
 		}
 		$data= '['.implode(',',$values).']';
@@ -84,19 +85,19 @@ class Db
 
 	public function getList($entity, $item, $endPosition = 30, $startPosition = 0)
 	{
-		if($endPosition > 0 && $endPosition < 30){
+		if ($endPosition > 0 && $endPosition < 30){
 			$endPosition = 30;
 		}
 		$length = $this->db->llen($entity . ':' . $item);
-		if($endPosition === 0) {
+		if ($endPosition === 0) {
 			$endPosition = $length;
 		}
-		if($length > $endPosition) {
+		if ($length > $endPosition) {
 			$startPosition = $length - $endPosition;
 			$endPosition = $length;
 		}
 		$content = $this->db->lrange($entity . ':'. $item, $startPosition, $endPosition);
-		if(!\count($content)) {
+		if (!\count($content)) {
 			return false;
 		}
 		$data= '['.implode(',',$content).']';
@@ -112,7 +113,7 @@ class Db
 	public function setList(string $entity, string $item, $content)
 	{
 		$result = $this->db->lpush($entity.':'.$item, $this->serializer->serialize($content,ContentTypes::SAVED_DATA_TYPE));
-		if($result === 0) {
+		if ($result === 0) {
 			return false;
 		}
 		$this->db->publish($entity, $item);
@@ -123,7 +124,7 @@ class Db
 	public function delListItem(string $entity, string $item, $contentForRemoving)
 	{
 		$result = $this->db->lrem($entity.':'.$item,-1, $contentForRemoving );
-		if($result !== 1) {
+		if ($result !== 1) {
 			return false;
 		}
 

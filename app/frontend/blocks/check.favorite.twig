@@ -1,4 +1,4 @@
-{% if FavoriteManager('isFavorite',user.getId(), favId) %}
+{% if FavoriteManager('isFavorite', user.getId(), favId) %}
     <span id="favorite" class="delete">
         <input type="hidden" id="action" value="delete">
         <input type="hidden" id="favoriteId" value="{{ favId }}">

@@ -14,7 +14,7 @@ class Response
 		$loader = new \Twig_Loader_Filesystem(Paths::TPL_PATH);
 		$loader->setPaths(Paths::TPL_PATH,'app');
 		$this->twig = new \Twig_Environment($loader, array(
-			'cache' => ROOT.'/cache/twig/',
+			'cache' => false, //ROOT.'/cache/twig/',
 		));
 		$twigFunction = new \Twig_Function('FavoriteManager', function($isFavorite,$user,$favoriteId) {
 		    return FavoriteManager::$isFavorite($user,$favoriteId);

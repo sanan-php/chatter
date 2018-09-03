@@ -16,7 +16,7 @@ class Finder
 		}
 		$entities = [];
 		foreach ($list as $id => $filename) {
-			if(!is_file(ROOT . '/data/' . $entity . DIRECTORY_SEPARATOR . $filename)) {
+			if (!is_file(ROOT . '/data/' . $entity . DIRECTORY_SEPARATOR . $filename)) {
 				unset($list[$id]);
 				continue;
 			}

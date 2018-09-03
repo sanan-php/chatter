@@ -19,7 +19,7 @@ class ChatController extends BaseController
 		if (!$with) {
 			$this->response->redirect(Url::createLinkToAction('user', 'all'));
 		}
-		if( $with === $this->getCurrentUser()->getId()) {
+		if ( $with === $this->getCurrentUser()->getId()) {
 			$this->response->redirect(Url::createLinkToAction('user', 'all'));
 		}
 		$params = [

@@ -2,54 +2,58 @@
 
 namespace Chat\Controllers;
 
-use Chat\Helpers\Logger;
+use Chat\Core\Headers;
+use Chat\Entity\User;
 use Workerman\Connection\AsyncUdpConnection;
 use Workerman\Worker;
 
 class SocketController extends BaseController
 {
-    private $webSocket;
-
-    public function __construct()
+	/**
+	 * SocketController constructor.
+	 * @throws \Twig_Error_Loader
+	 * @throws \Twig_Error_Runtime
+	 * @throws \Twig_Error_Syntax
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+		if ($this->tryAuth(false)) {
+			Headers::set()->forbidden();
+			$this->response->forbidden();
+		}
+	}
+	
+	public function getWorker()
     {
-        parent::__construct();
-        $this->webSocket = new Worker('websocket://127.0.0.1:8000');
-    }
-
-    public function getWorker()
-    {
-        /** @var AsyncUdpConnection[] $users */
-        $users = [];
-        $this->webSocket->onConnect = function($connection) use (&$users)
-        {
-            $connection->onWebSocketConnect = function($connection) use (&$users)
-            {
-                $currentConnectedUser = $this->request->get('uid');
-                if($this->userManager->getById($currentConnectedUser)) {
-                    $users[$currentConnectedUser] = $connection;
-                } else {
-                    Logger::write("Worker try connect: UID as $currentConnectedUser");
-                }
-            };
-        };
-        $this->webSocket->onClose = function($connection) use(&$users)
-        {
-            $user = array_search($connection, $users);
-            unset($users[$user]);
-        };
-        $this->webSocket->onWorkerStart = function() use (&$users)
-        {
-            $innerTcpWorker = new Worker(APP_TCP_SOCKET);
-            // create a handler that will be called when a local tcp-socket receives a message (for example from send.php)
-            $innerTcpWorker->onMessage = function($data) use (&$users) {
-                $data = json_decode($data);
-                if (isset($users[$data->user])) {
-                    $connection = $users[$data->user];
-                    $connection->send($data->message);
-                }
-            };
-            $innerTcpWorker->listen();
-            Worker::runAll();
-        };
+    	Headers::webSocket($this->request->server('http_sec_websocket_key'));
+		$webSocket = new Worker('websocket://chatter.local:8080/');
+		/** @var AsyncUdpConnection[] $users */
+		$users = [];
+		$webSocket->onConnect = function ($connection) use (&$users) {
+			$connection->onWebSocketConnect = function ($connection) use (&$users) {
+				$currentConnectedUser = $_COOKIE['uid'];
+				if ($this->userManager->getById($currentConnectedUser) instanceof User) {
+					$users[$currentConnectedUser] = $connection;
+				}
+			};
+		};
+		$webSocket->onWorkerStart = function () use (&$users) {
+			$innerTcpWorker = new Worker(APP_TCP_SOCKET);
+			// create a handler that will be called when a local tcp-socket receives a message (for example from send.php)
+			$innerTcpWorker->onMessage = function ($connection, $data) use (&$users) {
+				$data = json_decode($data);
+				if (isset($users[$data->user])) {
+					$webConnection = $users[$data->user];
+					$webConnection->send($data->message);
+				}
+			};
+			$innerTcpWorker->listen();
+		};
+		$webSocket->onClose = function ($connection) use (&$users) {
+			$user = array_search($connection, $users);
+			unset($users[$user]);
+		};
+		Worker::runAll();
     }
 }

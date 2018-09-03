@@ -25,17 +25,17 @@ class FavoriteManager extends AbstractManager
 	 */
 	public function create(User $forUser, string $favoriteId)
 	{
-		if(!$this->userManager->getById($favoriteId)) {
+		if (!$this->userManager->getById($favoriteId)) {
 			return false;
 		}
 		$serialized = $this->serializer->serialize($this->userManager->getById($favoriteId), 'json');
-		if(self::isFavorite($forUser->getId(),$favoriteId)) {
+		if (self::isFavorite($forUser->getId(),$favoriteId)) {
 			return false;
 		}
 		$favorite = new Favorite($forUser->getId(), $serialized);
 		$favorite->setId($this->generateItemId($favorite::getEntityName(), $forUser->getId()));
 		$result = $this->db->setList($favorite::getEntityName(), $forUser->getId(), $favorite);
-		if(!$result) {
+		if (!$result) {
 			return false;
 		}
 		
@@ -44,7 +44,7 @@ class FavoriteManager extends AbstractManager
 
 	public function delete(User $forUser, string $favorite)
 	{
-		if(!$this->userManager->getById($favorite)) {
+		if (!$this->userManager->getById($favorite)) {
 			return false;
 		}
 		/** @var Favorite[] $favorites */
@@ -52,7 +52,7 @@ class FavoriteManager extends AbstractManager
 		foreach ($favorites as $item) {
 			/** @var User $find */
 			$find = $this->serializer->deserialize($item->getFavorite(), User::class, 'json');
-			if($favorite !== $find->getId()) {
+			if ($favorite !== $find->getId()) {
 				continue;
 			}
 			$favorite = $this->serializer->serialize($item,'json');
@@ -77,16 +77,16 @@ class FavoriteManager extends AbstractManager
 	public static function isFavorite(string $userId, string $favoriteId)
 	{
 		$currentManager = new self();
-		if(!$currentManager->userManager->getById($userId)) {
+		if (!$currentManager->userManager->getById($userId)) {
 			return false;
 		}
-		if(!$currentManager->userManager->getById($favoriteId)) {
+		if (!$currentManager->userManager->getById($favoriteId)) {
 			return false;
 		}
 		/** @var User[] $favorites */
 		$favorites = $currentManager->getAll($userId,0);
 		foreach ($favorites as $favorite) {
-			if($favorite->getId() !== $favoriteId) {
+			if ($favorite->getId() !== $favoriteId) {
 				continue;
 			}
 			return true;

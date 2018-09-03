@@ -19,7 +19,7 @@ class L10n
 	{
 		$service = new self();
 		$langFile =  __DIR__ . '/Lang/'.$service->checkLang().'.php';
-		if(!file_exists($langFile)) {
+		if (!file_exists($langFile)) {
 			return require __DIR__ . '/Lang/Ru.php';
 		}
 		return require $langFile;
@@ -27,7 +27,7 @@ class L10n
 
 	private function checkLang()
 	{
-		if(!$this->req->cookie('lang')) {
+		if (!$this->req->cookie('lang')) {
 			return 'ru';
 		}
 

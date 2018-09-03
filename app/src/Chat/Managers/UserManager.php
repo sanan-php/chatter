@@ -18,7 +18,7 @@ class UserManager extends AbstractManager
      */
 	public function create(UserDto $userDto)
 	{
-		if(!$this->isEmail($userDto->getEmail())) {
+		if (!$this->isEmail($userDto->getEmail())) {
 			Logger::write('Неверный емейл : ' . $userDto->getEmail() . ';' . __LINE__ . ';' . __CLASS__);
 			return false;
 		}
@@ -40,10 +40,10 @@ class UserManager extends AbstractManager
 	 */
 	public function update(User $user, string $name, int $sex = 0, array $pic = [])
 	{
-		if($sex === 0 && \count($pic) < 2) {
+		if ($sex === 0 && \count($pic) < 2) {
 			return false;
 		}
-		if($pic['size'] > 0) {
+		if ($pic['size'] > 0) {
 			$allowedExt = ['jpg', 'jpeg', 'png', 'gif'];
 			$fileTmp = $pic['tmp_name'];
 			$fileName = $pic['name'];
@@ -61,10 +61,10 @@ class UserManager extends AbstractManager
 			$base64pic = 'data:image/' . $type . ';base64,' . base64_encode($data);
 			$user->setPic($base64pic);
 		}
-		if(\in_array($sex,[1,2],false)){
+		if (\in_array($sex,[1,2],false)){
 			$user->setSex($sex);
 		}
-		if($name !== $user->getName()) {
+		if ($name !== $user->getName()) {
 			$user->setName($name);
 		}
 
@@ -81,10 +81,10 @@ class UserManager extends AbstractManager
 	public function checkUser(string $login, string $pass)
 	{
 		$user = $this->getByLogin($login);
-		if(!$user) {
+		if (!$user) {
 			return false;
 		}
-		if(!\in_array($user->getPass(), [$this->passHash($pass), $this->passHash($pass,true)],false)) {
+		if (!\in_array($user->getPass(), [$this->passHash($pass), $this->passHash($pass,true)],false)) {
 			Logger::write('Неверный пароль: ' . $login . ';' . __LINE__ . ';' . __CLASS__);
 			return false;
 		}
@@ -124,7 +124,7 @@ class UserManager extends AbstractManager
 
 	public function passHash(string $pass, $old = false)
 	{
-		if($old === true) {
+		if ($old === true) {
 			return sha1(md5($pass.SALT));
 		}
 		
@@ -144,13 +144,13 @@ class UserManager extends AbstractManager
 	{
 		/** @var User[] $user */
 		$users = $this->getAll(0);
-		if(!\count($users)) {
+		if (!\count($users)) {
 			Logger::write('Ошибка перебора пользователей;' . __LINE__ . ';' . __CLASS__);
 
 			return false;
 		}
 		foreach ($users as $user) {
-			if($user->getEmail() !== $login) {
+			if ($user->getEmail() !== $login) {
 				continue;
 			}
 

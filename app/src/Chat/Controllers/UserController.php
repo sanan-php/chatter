@@ -17,10 +17,10 @@ class UserController extends BaseController
 	 */
 	public function getRegistration()
 	{
-		if($this->tryAuth(false)) {
+		if ($this->tryAuth(false)) {
 			$this->response->redirect(Url::createLinkToAction('user','profile'));
 		}
-		if($this->isPostQuery()) {
+		if ($this->isPostQuery()) {
 			$name = $this->request->post('name');
 			$login = $this->request->post('login');
 			$pass = $this->request->post('password');
@@ -33,18 +33,18 @@ class UserController extends BaseController
 				'name' => $name,
 				'email' => $login
 			];
-			if(empty($name) || empty($login) || empty($pass)) {
+			if (empty($name) || empty($login) || empty($pass)) {
 				$params['error'] = $this->l10n['regPage']['error'].' Не все поля заполнены.';
 				$this->response->render('user:reg', $params);
 			}
-			if(\strlen($pass) < 8) {
+			if (\strlen($pass) < 8) {
 				$params['error'] = $this->l10n['regPage']['error'].' Пароль содержит меньше 8 знаков.';
 				$this->response->render('user:reg', $params);
 			}
 			$dto = new UserDto($name, $login, $pass);
 			/** @var User $user */
 			$user = $this->userManager->create($dto);
-			if(!$user) {
+			if (!$user) {
 			    $params['error'] = $this->l10n['regPage']['error'] . ' К сожалению, не удалось Вас зарегистрировать';
 				$this->response->render('user:reg', $params);
 			}
@@ -69,7 +69,7 @@ class UserController extends BaseController
 	 */
 	public function getLogin()
 	{
-		if($this->tryAuth(false)) {
+		if ($this->tryAuth(false)) {
 			$this->response->redirect(Url::createLinkToAction('user','profile'));
 		}
 		$params = [
@@ -79,10 +79,10 @@ class UserController extends BaseController
 			],
 			'labels' => array_merge($this->l10n['main'],$this->l10n['authPage']),
 		];
-		if($this->isPostQuery()) {
+		if ($this->isPostQuery()) {
 			$login = $this->request->post('login');
 			$pass = $this->request->post('password');
-			if(!$this->userManager->checkUser($login, $pass)) {
+			if (!$this->userManager->checkUser($login, $pass)) {
 				$params['login'] = $login;
 				$params['error'] = $this->l10n['authPage']['error'];
 				$this->response->render('user:login', $params);
@@ -105,7 +105,7 @@ class UserController extends BaseController
 	 */
 	public function getAll()
 	{
-		if(!$this->tryAuth(false)) {
+		if (!$this->tryAuth(false)) {
 			Headers::set()->redirect(Url::createLinkToAction('user','login'));
 		}
 		$limit = (int) $this->request->get('limit');
@@ -133,15 +133,15 @@ class UserController extends BaseController
 			'user' => $this->getCurrentUser(),
 			'links' => $this->mainLinks(),
 		];
-		if($this->isPostQuery()) {
+		if ($this->isPostQuery()) {
 			$name = (string) $this->request->post('name');
 			$pic = $this->request->file('user-pic');
 			$sex = (int) $this->request->post('sex');
-			if(!$pic) {
+			if (!$pic) {
 				$params['error'] = $this->l10n['profile']['fileIsUndefined'];
 				$this->response->render('user:profile', $params);
 			}
-			if(!$this->userManager->update($this->getCurrentUser(), $name, $sex, $pic)) {
+			if (!$this->userManager->update($this->getCurrentUser(), $name, $sex, $pic)) {
 				$params['error'] = $this->l10n['profile']['fileUploadError'];
 				$this->response->render('user:profile', $params);
 			}
@@ -159,7 +159,7 @@ class UserController extends BaseController
 	{
 		$param = $this->request->post('queryString');
 		$isAjax = $this->request->post('isAjax');
-		if(!$this->tryAuth(false)) {
+		if (!$this->tryAuth(false)) {
 		    Headers::set()->forbidden();
 		    $this->response->forbidden();
 		}
@@ -168,12 +168,12 @@ class UserController extends BaseController
 		$allUsers = $this->userManager->getAll($limit,$offset);
 		$list = [];
 		foreach ($allUsers as $user) {
-		    if(!\in_array($param,[$user->getName(),$user->getEmail()],false)) {
+		    if (!\in_array($param,[$user->getName(),$user->getEmail()],false)) {
 			continue;
 		    }
 		    $list[] = $user;
 		}
-		if($isAjax) {
+		if ($isAjax) {
 		    $this->response->json([
 		       'find' => $list
 		    ]);

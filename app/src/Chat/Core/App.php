@@ -28,11 +28,11 @@ class App
 	{
 		$route= ucfirst($this->request->get(Reference::CONTROLLER_QUERY_PARAM));
 		$action = str_replace('_', '', ucwords($this->request->get(Reference::ACTION_QUERY_PARAM)));
-		if(!class_exists("Chat\\Controllers\\{$route}Controller")) {
+		if (!class_exists("Chat\\Controllers\\{$route}Controller")) {
 			$this->response->redirect(Url::createLinkToAction('user','all'));
 		}
 		$controller = ServiceBinder::bind("Chat\\Controllers\\{$route}Controller");
-		if(!method_exists($controller, 'get'.$action)) {
+		if (!method_exists($controller, 'get'.$action)) {
 			$this->response->notFound();
 		}
 		$action = 'get'.$action;

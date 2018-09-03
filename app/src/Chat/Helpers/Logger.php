@@ -14,7 +14,7 @@ class Logger
 		$content = '[' . date('Y-m-d T H:i:s') . "] [{$type}]: {$message} \n";
 		fwrite($resource, $content);
 		fclose($resource);
-		if($error) {
+		if ($error) {
 			Headers::set()->contentType(ContentTypes::JSON);
 			Headers::set()->forbidden();
 			die($message);

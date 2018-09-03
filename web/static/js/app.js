@@ -22,15 +22,15 @@ $(function(){
 
     inp.change(function(){
         var file_name;
-        if( file_api && inp[ 0 ].files[ 0 ] )
+        if ( file_api && inp[ 0 ].files[ 0 ] )
             file_name = inp[ 0 ].files[ 0 ].name;
         else
             file_name = inp.val().replace( "C:\\fakepath\\", '' );
 
-        if( ! file_name.length )
+        if ( ! file_name.length )
             return;
 
-        if( lbl.is( ":visible" ) ){
+        if ( lbl.is( ":visible" ) ){
             lbl.text( file_name );
             btn.text( "Выбрать" );
         }else
@@ -40,7 +40,7 @@ $(function(){
     $('#favorite').click(function() {
         favoriteId = $('#favoriteId').val();
         action  = $('#favorite #action').val();
-        if(action==='create') {
+        if (action==='create') {
             newAction = 'delete';
         } else {
             newAction = 'create';
@@ -52,7 +52,7 @@ $(function(){
                 'favoriteId': favoriteId
             },
             success: function(response) {
-                if(response.success) {
+                if (response.success) {
                     $('#favorite').removeAttr('class').attr('class',newAction);
                     $('#favorite #action').val(newAction);
                 }

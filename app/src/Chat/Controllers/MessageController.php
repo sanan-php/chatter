@@ -25,11 +25,11 @@ class MessageController extends BaseController
 	public function getCreate()
 	{
 		$to = $this->request->post('to');
-		if(!$this->tryAuth(false)) {
+		if (!$this->tryAuth(false)) {
 			Headers::set()->forbidden();
 			$this->response->forbidden();
 		}
-		if(!$this->isPostQuery()) {
+		if (!$this->isPostQuery()) {
 			Headers::set()->conflict();
 			$this->response->json([
 				'errorMess' => $this->l10n['main']['conflict']
@@ -37,13 +37,13 @@ class MessageController extends BaseController
 		}
 		$message = base64_decode($this->request->post('message'));
 		$result = $this->messageManager->create($this->getCurrentUser()->getId(), $to, $message);
-		if(!$result) {
+		if (!$result) {
 			Headers::set()->conflict();
 			$this->response->json([
 				'errorMess' => $this->l10n['messages']['notCreated']
 			]);
 		}
-		$this->sendToSocket('Message',$result);
+		$this->sendToSocket($to,$result);
 		$this->response->json([
 			'success' => true,
 			'content' => json_decode($result, true)
@@ -59,7 +59,7 @@ class MessageController extends BaseController
 	*/
 	public function getAll()
 	{
-		if(!$this->tryAuth(false)) {
+		if (!$this->tryAuth(false)) {
 			Headers::set()->forbidden();
 			$this->response->forbidden();
 		}
@@ -69,16 +69,16 @@ class MessageController extends BaseController
 		/** @var Message[] $result */
 		$result = $this->messageManager->getMessages($this->getCurrentUser()->getId(), $to, $endPosition, $startPosition);
 		$result2 = $this->messageManager->getMessages($to, $this->getCurrentUser()->getId(), $endPosition, $startPosition);
-		if(!$result && !$result2) {
+		if (!$result && !$result2) {
 			$this->response->json([
 				'errorMess' => $this->l10n['messages']['messagesNotFound'] . ';' . $to
 			]);
 		}
 		$messages = $this->convertToArray($result);
 		$temp = $this->convertToArray($result2);
-		if(\count($temp) && \count($messages)) {
+		if (\count($temp) && \count($messages)) {
 		    $messages = array_merge($messages,$temp);
-		} elseif(\count($temp)) {
+		} elseif (\count($temp)) {
 		    $messages = $temp;
 		}
 		$messages = $this->sortMessages($messages);
@@ -91,7 +91,7 @@ class MessageController extends BaseController
 	{
 		$messages = [];
 		foreach ($result as $item) {
-			if(!($item instanceof Message)) {
+			if (!($item instanceof Message)) {
 				continue;
 			}
 			$messages[] = [

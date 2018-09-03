@@ -14,6 +14,17 @@ class Headers
 		header('Pragma: public');
 		header('Content-Length: ' . filesize(Paths::DL_PATH . $fileName));
 	}
+	
+	public static function webSocket(string $key)
+	{
+		$hash = base64_encode(pack('H*', sha1($key . '258EAFA5-E914-47DA-95CA-C5AB0DC85B11')));
+		header('HTTP/1.1 101 Web Socket Protocol Handshake');
+		header('Upgrade: websocket');
+		header('Connection: Upgrade');
+		header('Sec-WebSocket-Accept: '.$hash);
+		header('WebSocket-Origin:'.HOST.':8080');
+		header('Content-Type: application/json');
+	}
 
 	public function contentType(string $type, string $charset = 'utf-8')
 	{

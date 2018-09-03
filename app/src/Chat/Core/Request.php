@@ -44,7 +44,7 @@ class Request
 		$this->cookie = $_COOKIE;
 		$this->files = $_FILES;
 
-		if(session_status() !== PHP_SESSION_ACTIVE) {
+		if (session_status() !== PHP_SESSION_ACTIVE) {
 			session_name('CHAT_SESS');
 			session_start([
 
@@ -115,7 +115,7 @@ class Request
 	 * @return mixed
 	 */
 	public function getAll(string $name) {
-		if(!method_exists($this, $name)) {
+		if (!method_exists($this, $name)) {
 			die("Error of request: Param type \"{$name}\" is undefined.");
 		}
 
