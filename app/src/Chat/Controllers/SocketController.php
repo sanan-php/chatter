@@ -9,20 +9,6 @@ use Workerman\Worker;
 
 class SocketController extends BaseController
 {
-	/**
-	 * SocketController constructor.
-	 * @throws \Twig_Error_Loader
-	 * @throws \Twig_Error_Runtime
-	 * @throws \Twig_Error_Syntax
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		if ($this->tryAuth(false)) {
-			Headers::set()->forbidden();
-			$this->response->forbidden();
-		}
-	}
 	
 	public function getWorker()
     {
