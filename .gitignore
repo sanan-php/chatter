@@ -1,10 +1,5 @@
-!/app/log/.gitkeep
-/app/log/*
-!/app/cache/twig/.gitkeep
-/app/cache/twig/*
 !.gitignore
 !composer.json
-composer.phar
 !composer.lock
-/vendor/
-/.idea/
+/www/chatter/vendor/
+.idea

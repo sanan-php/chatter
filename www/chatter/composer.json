@@ -1,0 +1,22 @@
+{
+    "require": {
+        "jms/serializer": "^1.13",
+        "doctrine/annotations": "^1.6",
+        "twig/twig": "^2.0",
+        "cheprasov/php-redis-client": "^1.8",
+        "workerman/workerman": "^3.5"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-master"
+    },
+    "prefer-stable": true,
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": {
+            "Chat\\": "app/src/"
+        }
+    },
+    "autoload-dev": {
+        "classmap": ["app/src/"]
+    }
+}

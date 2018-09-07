@@ -20,10 +20,36 @@
 * Просмотр списка пользователей (случайные 50)
 * Переписка с пользователем
 * Точный поиск пользоватей (по имени/е-мейлу)
-* Фавориты (Добавление/удаление пользователей в закладки для дальнейшей связи с ними) 
-* Подгрузка данных (ajax-пагинация) для страницы поиска \*
+* Фавориты (Добавление/удаление пользователей в закладки для дальнейшей связи с ними)
 
-\* В процессе.
+***
+**Как запустить?**
 
+Поднимаем докер:
+
+```bash
+$ docker-composer up -d
+```
+Смотрим, что все контейнеры запущены:
+```bash
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                              NAMES
+62a9de376018        nginx               "nginx -g 'daemon of…"   4 seconds ago       Up 2 seconds        0.0.0.0:80->80/tcp                 chatter_nginx_1
+4d9ec9f5ec0f        chatter_php         "/usr/sbin/php-fpm7.…"   5 seconds ago       Up 3 seconds        0.0.0.0:8081->8081/tcp, 9000/tcp   chatter_php_1
+39502c4faf4d        redis               "docker-entrypoint.s…"   About an hour ago   Up 4 seconds        0.0.0.0:6379->6379/tcp             chatter_redis_1
+```
+
+Сверяем IP из ``./chatter/config/params.php::REDIS_TCP_SOCKET`` c данными в контейнере Redis\* 
+(IP адрес должен совпадать):
+
+```bash 
+docker inspect 39502c4faf4d | grep -i Gateway
+"Gateway": "",
+            "IPv6Gateway": "",
+                    "Gateway": "172.18.0.1",
+                    "IPv6Gateway": "",
+
+```
+\* Нужно передать ID контейнера
 ***
 По всем возникающим вопросам mail@sanan.tech

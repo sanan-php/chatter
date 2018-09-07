@@ -1,0 +1,32 @@
+version: "2"
+services:
+  nginx:
+    image: nginx
+    ports:
+    - "80:80"
+    depends_on:
+    - php
+    - redis
+    volumes_from:
+    - php
+    volumes:
+    - ./services/nginx/nginx.conf:/etc/nginx/nginx.conf
+    - ./services/nginx/conf.d:/etc/nginx/conf.d
+    - ./data/nginx/:/var/log/nginx/
+    working_dir: /etc/nginx/conf.d
+  php:
+    build:
+      context: ./services/php
+      dockerfile: Dockerfile
+    depends_on:
+    - redis
+    volumes:
+    - ./www:/home/www
+    domainname: "chatter.local"
+    hostname: "chatter.local"
+    ports:
+      - "8081:8081"
+  redis:
+    image: redis
+    ports:
+    - "6379:6379"
