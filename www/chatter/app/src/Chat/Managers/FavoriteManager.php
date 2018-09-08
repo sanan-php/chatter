@@ -6,7 +6,7 @@ use Chat\Core\ServiceBinder;
 use Chat\Entity\Favorite;
 use Chat\Entity\User;
 
-class FavoriteManager extends AbstractManager
+class FavoriteManager extends BaseManager
 {
     /** @var UserManager */
     private $userManager;
@@ -74,8 +74,11 @@ class FavoriteManager extends AbstractManager
 		return $results;
 	}
 
-	public static function isFavorite(string $userId, string $favoriteId)
+	public static function isFavorite($userId, $favoriteId)
 	{
+		if($userId === null || $favoriteId === null) {
+			return false;
+		}
 		$currentManager = new self();
 		if (!$currentManager->userManager->getById($userId)) {
 			return false;
@@ -85,6 +88,9 @@ class FavoriteManager extends AbstractManager
 		}
 		/** @var User[] $favorites */
 		$favorites = $currentManager->getAll($userId,0);
+		if(!\count($favorites)) {
+			return false;
+		}
 		foreach ($favorites as $favorite) {
 			if ($favorite->getId() !== $favoriteId) {
 				continue;

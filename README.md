@@ -4,14 +4,6 @@
 в качетсве БД используется **Redis**. В чате используются **веб-сокеты**.
 По структуре кода может вам напомнить что-то между Yii2 и Symfony 3x.
 
-## Зачем?
-В качестве примера кода - для иллюстрации моих навыков, 
-полученных спустя два года с начала коммерческой разработки. 
-Чтобы показать свое понимание ООП, подходы, применяемые при разработке.
-До этого времени занимался маленькими проектами еще около пары лет, 
-в виде фулстека(+фронтенд), ну и писал на бэкенде легаси-код 
-в процедурном стиле (в общем, то еще было время).
-
 ***
 **Список функций:**
 * Регистрация
@@ -25,31 +17,45 @@
 ***
 **Как запустить?**
 
-Поднимаем докер:
+Добавляем хост
+```bash
+sanan@sanan:~/images/chatter$ sudo vim /etc/hosts
+
+# ...
+
+127.0.0.1       chatter.local
+
+```
+Смотрим владельца папок data, services, www, а так же www/chatter/vendor. 
+Везде владельцем должны быть вы, кроме последенего. Укажите там права www-data и вашего пользователя, как группу и юзера.
+Пример:
+```bash
+sanan@sanan:~/images/chatter$ sudo chown www-data:sanan -R www/chatter/app/vendor/
+``` 
+
+Поднимаем докер (перед этим вы должны убедиться, что у вас отключен nxinx на вашем пк, если он имеется, а так же php и redis нужно отключить):
 
 ```bash
-$ docker-composer up -d
+sanan@sanan:~/images/chatter$ service [имя отключаемой службы] stop
+
+sanan@sanan:~/images/chatter$ docker-compose up -d
 ```
-Смотрим, что все контейнеры запущены:
+
+Загружаем библиотеки:
 ```bash
-$ docker ps
-CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                              NAMES
-62a9de376018        nginx               "nginx -g 'daemon of…"   4 seconds ago       Up 2 seconds        0.0.0.0:80->80/tcp                 chatter_nginx_1
-4d9ec9f5ec0f        chatter_php         "/usr/sbin/php-fpm7.…"   5 seconds ago       Up 3 seconds        0.0.0.0:8081->8081/tcp, 9000/tcp   chatter_php_1
-39502c4faf4d        redis               "docker-entrypoint.s…"   About an hour ago   Up 4 seconds        0.0.0.0:6379->6379/tcp             chatter_redis_1
-```
-
-Сверяем IP из ``./chatter/config/params.php::REDIS_TCP_SOCKET`` c данными в контейнере Redis\* 
-(IP адрес должен совпадать):
-
-```bash 
-docker inspect 39502c4faf4d | grep -i Gateway
-"Gateway": "",
-            "IPv6Gateway": "",
-                    "Gateway": "172.18.0.1",
-                    "IPv6Gateway": "",
+sanan@sanan:~/images/chatter$ docker-compose exec php composer install
 
 ```
-\* Нужно передать ID контейнера
+Запускаем вебсокеты:
+```bash
+sanan@sanan:~/images/chatter$ docker-compose exec php php web/ws/index.php start -d
+```
+
+### Готово!
+
+Откройте в браузере адрес:
+ 
+ ``http://chatter.local``
+
 ***
 По всем возникающим вопросам mail@sanan.tech

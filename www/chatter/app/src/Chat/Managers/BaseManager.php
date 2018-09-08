@@ -4,7 +4,7 @@ namespace Chat\Managers;
 
 use Chat\Core\Db;
 
-abstract class AbstractManager
+class BaseManager
 {
 	/** @var Db */
 	protected $db;

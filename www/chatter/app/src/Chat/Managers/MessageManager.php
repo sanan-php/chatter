@@ -5,7 +5,7 @@ namespace Chat\Managers;
 use Chat\Core\ServiceBinder;
 use Chat\Entity\Message;
 
-class MessageManager extends AbstractManager
+class MessageManager extends BaseManager
 {
 	/** @var UserManager */
 	private $userManager;

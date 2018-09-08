@@ -8,7 +8,7 @@ use Chat\DTO\UserDto;
 use Chat\Entity\User;
 use Chat\Helpers\Logger;
 
-class UserManager extends AbstractManager
+class UserManager extends BaseManager
 {
 
     /**

@@ -8,7 +8,7 @@ define('AUTH_KEY','AWlDr$3sPdeC');
 define('LANG','ru');
 define('API_PUBLIC_KEY','AdpErBkl3dsFqiPoC');
 define('APP_TCP_SOCKET','tcp://chatter.local:1234');
-define('REDIS_TCP_SOCKET','172.18.0.1:6379');
+define('REDIS_TCP_SOCKET','redis:6379');
 
 ini_set('max_execution_time',15);
 
