@@ -26,12 +26,6 @@ sanan@sanan:~/images/chatter$ sudo vim /etc/hosts
 127.0.0.1       chatter.local
 
 ```
-Смотрим владельца папок data, services, www, а так же www/chatter/vendor. 
-Везде владельцем должны быть вы, кроме последенего. Укажите там права www-data и вашего пользователя, как группу и юзера.
-Пример:
-```bash
-sanan@sanan:~/images/chatter$ sudo chown www-data:sanan -R www/chatter/app/vendor/
-``` 
 
 Поднимаем докер (перед этим вы должны убедиться, что у вас отключен nxinx на вашем пк, если он имеется, а так же php и redis нужно отключить):
 
@@ -45,6 +39,11 @@ sanan@sanan:~/images/chatter$ docker-compose up -d
 ```bash
 sanan@sanan:~/images/chatter$ docker-compose exec php composer install
 
+```
+Укажите к папке ``vendor`` права вашего пользователя и www-data, как юзера и группу.
+Пример:
+```bash
+sanan@sanan:~/images/chatter$ sudo chown sanan:www-data -R www/chatter/vendor/
 ```
 Запускаем вебсокеты:
 ```bash
