@@ -2,7 +2,8 @@
 
 namespace Chat\Core;
 
-use Chat\Helpers\Logger;
+use Chat\Common\Enums\ContentTypes;
+use Chat\Common\Helpers\Logger;
 use RedisClient\ClientFactory;
 
 class Db
@@ -39,7 +40,7 @@ class Db
 			return false;
 		}
 
-		return $this->serializer->deserialize($this->db->hget($entity, $item),"Chat\\Entity\\$entity",'json');
+		return $this->serializer->deserialize($this->db->hget($entity, $item),"Chat\\Core\\Entity\\$entity",'json');
 	}
 
 	public function setItem(string $entity, string $id, $content)
@@ -76,7 +77,7 @@ class Db
 		$data= '['.implode(',',$values).']';
 		$items = $this->serializer->deserialize(
 			$data,
-			"array<Chat\\Entity\\{$entity}>",
+			"array<Chat\\Core\\Entity\\{$entity}>",
 			'json'
 		);
 
@@ -103,7 +104,7 @@ class Db
 		$data= '['.implode(',',$content).']';
 		$items = $this->serializer->deserialize(
 			$data,
-			"array<Chat\\Entity\\{$entity}>",
+			"array<Chat\\Core\\Entity\\{$entity}>",
 			'json'
 		);
 
