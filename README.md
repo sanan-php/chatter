@@ -35,7 +35,7 @@ sanan@sanan:~/images/chatter$ service [имя отключаемой служб�
 sanan@sanan:~/images/chatter$ docker-compose up -d
 ```
 
-Заходим в контейнер, загружаем библиотеки и запускаем с:
+Заходим в контейнер и загружаем библиотеки:
 ```bash
 sanan@sanan:~/images/chatter$ docker-compose exec php bash
 root@chatter:/home/www/chatter# cd app/
