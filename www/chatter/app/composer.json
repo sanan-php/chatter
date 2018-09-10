@@ -14,10 +14,10 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-0": {
-            "Chat\\": "app/src/"
+            "Chat\\": "src/"
         }
     },
     "autoload-dev": {
-        "classmap": ["app/src/"]
+        "classmap": ["src/"]
     }
 }

@@ -1,6 +1,5 @@
 <?php
 define('ROOT', __DIR__ . DIRECTORY_SEPARATOR);
-define('SRC', ROOT . '../src' . DIRECTORY_SEPARATOR);
 define('SALT', '1fDr3W$q^TGiCDb');
 define('HOST', 'chatter.local');
 define('WS_ADDR','0.0.0.0:8081');

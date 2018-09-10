@@ -35,15 +35,18 @@ sanan@sanan:~/images/chatter$ service [имя отключаемой служб�
 sanan@sanan:~/images/chatter$ docker-compose up -d
 ```
 
-Загружаем библиотеки:
+Заходим в контейнер, загружаем библиотеки и запускаем с:
 ```bash
-sanan@sanan:~/images/chatter$ docker-compose exec php composer install
+sanan@sanan:~/images/chatter$ docker-compose exec php bash
+root@chatter:/home/www/chatter# cd app/
+root@chatter:/home/www/chatter/app# composer install
+root@chatter:/home/www/chatter/app# exit
 
 ```
 Укажите к папке ``vendor`` права вашего пользователя и www-data, как юзера и группу.
 Пример:
 ```bash
-sanan@sanan:~/images/chatter$ sudo chown sanan:www-data -R www/chatter/vendor/
+sanan@sanan:~/images/chatter$ sudo chown sanan:www-data -R www/chatter/app/vendor/
 ```
 Запускаем вебсокеты:
 ```bash

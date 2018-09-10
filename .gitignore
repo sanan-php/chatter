@@ -1,5 +1,5 @@
 !.gitignore
 !composer.json
 !composer.lock
-/www/chatter/vendor/
+/www/chatter/app/vendor/
 .idea
