@@ -29,7 +29,6 @@ class SocketController extends BaseController
 		};
 		$webSocket->onWorkerStart = function () use (&$users) {
 			$innerTcpWorker = new Worker(APP_TCP_SOCKET);
-			// create a handler that will be called when a local tcp-socket receives a message (for example from send.php)
 			$innerTcpWorker->onMessage = function ($connection, $data) use (&$users) {
 				$data = json_decode($data);
 				if (isset($users[$data->user])) {

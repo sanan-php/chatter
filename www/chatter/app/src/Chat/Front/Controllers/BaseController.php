@@ -7,7 +7,7 @@ use Chat\Common\Enums\Reference;
 use Chat\Front\Http\Request;
 use Chat\Front\Http\Response;
 use Chat\Core\ServiceBinder;
-use Chat\Entity\User;
+use Chat\Core\Entity\User;
 use Chat\Common\Helpers\Url;
 use Chat\Core\Managers\UserManager;
 

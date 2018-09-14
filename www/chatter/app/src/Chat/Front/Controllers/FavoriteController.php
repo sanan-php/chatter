@@ -5,7 +5,7 @@ namespace Chat\Front\Controllers;
 
 use Chat\Front\Http\Headers;
 use Chat\Core\ServiceBinder;
-use Chat\Entity\User;
+use Chat\Core\Entity\User;
 use Chat\Core\Managers\FavoriteManager;
 
 class FavoriteController extends BaseController
